@@ -62,8 +62,8 @@ Projectile.prototype.draw = function () {
 
 Projectile.prototype.update = function (model) {
 	this.m = model;
-	this.m.x += dx;
-	this.m.y += dy;
+	this.m.x += this.dx;
+	this.m.y += this.dy;
 	this.draw();
 };
 
