@@ -164,7 +164,9 @@
 			deathCount++;
 		}
 
-		handleMovement(dt);
+		handleInput(dt);
+
+		applyPhysics(dt);
 
 		if (ownShipEntity) {
 			socket.emit(
@@ -196,6 +198,9 @@
 		this.m.x = data.x;
 		this.m.y = data.y;
 		this.m.type = data.type;
+
+		this.dx = 0;
+		this.dy = 0;
 		
 		this.el = {};
 		this.el.point = document.createElement('div');
@@ -323,12 +328,13 @@
 
 
 
-	function handleMovement(dt) {
+	function handleInput(dt) {
 		if (!ownShipEntity) return;
 		dt = dt || 1;
 		var ship = ownShipEntity;
 		var speed = 0.5 * dt;
 		var slowdown = 3 / 4;
+
 		// up left
 		if (Keys.isDown(Keys.UP) && Keys.isDown(Keys.LEFT)) {
 			speed = speed * slowdown;
@@ -371,6 +377,46 @@
 				ship.moveY(speed);
 			}
 		}
+	}
+
+	function applyPhysics(delta) {
+		var gameWidth = window.innerWidth;
+		var gameHeight = window.innerHeight;
+		var centerX = gameWidth / 2;
+		var centerY = gameHeight / 2;
+
+		var x_d = centerX - this.m.x;
+		var y_d = centerY - this.m.y;
+		var x_sqr = x_d*x_d;
+		var y_sqr = y_d*y_d;
+
+		var dist = Math.sqrt(x_sqr + y_sqr);
+
+		var pull = this.GRAVITY / dist;
+		//(x_d*x_d + y_d*y_d);
+
+		//if it has already rotated, make sure to premove
+		//this.preMove(delta);
+
+		this.velocity.dx += (
+			//x_sqr*pull
+			x_d * pull
+		);
+	    this.velocity.dy += (
+	    	//y_sqr*pull
+	    	y_d * pull
+	    );
+	    this.x += this.velocity.dx * delta;
+	    this.y += this.velocity.dy * delta;
+	    this.shipRotation += this.velocity.rotation * delta;
+
+
+
+
+
+
+
+
 	}
 
 
