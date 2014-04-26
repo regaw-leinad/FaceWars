@@ -33,9 +33,7 @@ $(document).mousemove(function(e) {
 });
 
 function animateFollower() {
-	if (mouseX < 200) {
-		mouseX = 200;
-	}
+
 	follower.css('left', mouseX);
 	follower.css('top', mouseY);
 }
@@ -62,3 +60,7 @@ function checkKey(e) {
     	// down arrow
     }
 }
+
+$('#submit').click(function(){
+	$('#layer0').fadeOut()
+})

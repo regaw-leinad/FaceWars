@@ -3,14 +3,34 @@ html, body {
 	height: 100%;
 	margin: 0;
 	overflow: hidden;
+	font-family: courier;
+	font-size: 50px;
+	color: #FFF;
 }
 
 body {
 	background: #000;
 }
 
+h1 {
+	color: #FFF;
+	text-align: center;
+	font-size: 200%;
+}
 
-#layer1, #layer2 {
+p {
+	font-size: 50%;
+}
+
+#layer0 {
+	background-color: #000;
+	z-index: 5;
+	min-height: 100%;
+	min-width: 100%;
+	text-align: center;
+}
+
+#layer1, #layer2, #layer0 {
 	position: absolute;
 }
 
