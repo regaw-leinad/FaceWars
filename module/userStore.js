@@ -18,4 +18,8 @@ UserStore.prototype.getUserIdBySocketId = function(socketId) {
     return this.userSockets[socketId];
 };
 
+UserStore.prototype.hasUser = function(userName) {
+    return this.users.hasOwnProperty(userName.toLowerCase());
+};
+
 module.exports = UserStore;
