@@ -83,9 +83,9 @@ socket.on(Packet.UPDATE_ENTITY, function (data) {
 });
 
 socket.on(Packet.ENTITY_DIE, function (data) {
-	entitiesByID[data.entity.id].removeFromDOM();
-	delete entitiesByID[data.entity.id];
-
+	if (entitiesByID[data.entity.id]) {
+		entitiesByID[data.entity.id].removeFromDOM();
+		delete entitiesByID[data.entity.id];
+	}
 	// TODO explosion
-	
 });
