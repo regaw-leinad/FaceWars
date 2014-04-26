@@ -229,3 +229,20 @@ li img {
 	position: absolute;
 }*/
 
+
+
+#killBox {
+	width: auto;
+	height: auto;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+
+#userBox {
+	width: auto;
+	height: auto;
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
