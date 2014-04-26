@@ -13,23 +13,27 @@ so?
 
 
 VECTOR PACKET
-- shipID
-- type (1 === ship && 2 === missile)
+- id
+- type
 - x
 - y
 - dx
 - dy
+- (if CREATE) userID
 
 
 game objects:
-
+- user (userID, name, color)
+- vector (x, y, dx, dy)
+- size (width, height)
 - playing field (radius)
-- sun (x, y)
-- user (id, name, color)
-- ship (id, x, y, dx, dy)
-- missile (shipID, x, y, dx, dy)
+- sun (vector, size)
+- ship (shipID, vector, size)
+- missile (missileID, vector, size)
 
 
 ON GAME START
+these things need to be agreed on
+- game session id
 - player name and colors
 - player starting positions
