@@ -69,8 +69,8 @@ socket.on('connection', function(client) {
     });
 
     client.on(Packet.ENTITY_DIE, function(data) {
-        console.log('Received ENTITY_DIE Packet');
-        console.log(data);
+        //console.log('Received ENTITY_DIE Packet');
+        //console.log(data);
 
         if (data.entity && data.entity.userName) {
             var user = users.getUserByUserName(data.entity.userName);
