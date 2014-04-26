@@ -22,7 +22,7 @@ function resize() {
 	centerCircle(star, xcenter, ycenter)
 
 	circle.setAttribute('r', smaller / 2 + 500);
-	star.setAttribute('r', smaller / 25);
+	//star.setAttribute('r', smaller / 25);
 
 
 	//circle.setAttribute('cx', xcenter);
