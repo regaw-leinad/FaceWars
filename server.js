@@ -24,10 +24,10 @@ socket.on('connection', function(client) {
     console.log(client.id + ' has connected');
 
     client.on(Packet.USER_AUTH_NEW, function(data) {
-        console.log('Received USER_AUTH_NEW Packet:');
+        console.log('Received USER_AUTH_NEW Packet');
         console.log(data);
 
-        if (users.getUserBySocketId(client.id)) {
+        if (users.getUserIdBySocketId(client.id)) {
             console.log('Unauthorized request');
             client.emit(Packet.USER_AUTH_RESPONSE, { err: 'Unauthorized request', errCode: 5 });
         } else {
@@ -41,7 +41,28 @@ socket.on('connection', function(client) {
                 var newUser = new User(data.userName, data.color || 'fff', client.id);
                 users.addUser(newUser);
                 var session = sessions.getNextOpenSession();
-                client.emit(Packet.USER_AUTH_RESPONSE, { session: mainSession })
+                session.addUser(newUser, client);
+
+                client.emit(Packet.USER_AUTH_RESPONSE, { session: mainSession });
+                client.broadcast.to(session.getId).emit(Packet.USER_JOIN_SESSION, { user: newUser });
+            }
+        }
+    });
+    
+    client.on(Packet.USER_DISCONNECTING, function(data) {
+        console.log('Received USER_DISCONNECTING Packet');
+        console.log(data);
+
+        if (data.user) {
+            var user = data.user;
+
+            var registeredUserId = self.getUserIdBySocketId(client.id);
+            if (registeredUserId && registeredUserId === user.id) {
+                // remove from users and session
+                users.removeUser(user);
+                var session = sessions.getSessionByUser(user);
+                session.removeUser(user, client);
+                socket.sockets.in(session.id).emit(Packet.USER_LEAVE_SESSION, { user: user });
             }
         }
     });
