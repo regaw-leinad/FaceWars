@@ -22,6 +22,7 @@
 			margin-top: -25px;
 			margin-left: -25px;
 			border-radius: 100px;
+			opacity: 0.6;
 		}
 	</style>
 </head>
@@ -158,8 +159,8 @@
 		data.id = (new Date()).getTime() + '-' + salt();
 		data.color = user.color;
 		data.userName = user.name;
-		data.x = Math.round(Math.random() * window.innerWidth);
-		data.y = Math.round(Math.random() * window.innerWidth);
+		data.x = 10;
+		data.y = 10;
 		data.type = EntityType.SHIP;
 		return data;
 	};
@@ -320,8 +321,11 @@
 
 
 
-	// handle frame 
+	// handle frame
 	function onFrame(time) {
+
+		onFrame.count++;
+		if (onFrame.count % 2) return;
 
 		var dt = time - onFrame.oldTime;
 		onFrame.oldTime = time;
@@ -347,6 +351,7 @@
 	}
 	// start frame handling
 	onFrame.oldTime = 0;
+	onFrame.count = 0;
 	requestAnimationFrame(onFrame);
 
 
