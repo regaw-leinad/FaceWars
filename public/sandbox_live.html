@@ -323,10 +323,12 @@
 
 	// handle frame
 	function onFrame(time) {
-
 		onFrame.count++;
-		if (onFrame.count % 2) return;
-
+		if (onFrame.count % onFrame.rateLimit === 0) {
+			onFrame.count = 0;
+			requestAnimationFrame(onFrame);
+			return;
+		}
 		var dt = time - onFrame.oldTime;
 		onFrame.oldTime = time;
 
@@ -352,6 +354,7 @@
 	// start frame handling
 	onFrame.oldTime = 0;
 	onFrame.count = 0;
+	onFrame.rateLimit = 5;
 	requestAnimationFrame(onFrame);
 
 
