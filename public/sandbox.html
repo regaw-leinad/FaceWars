@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>sandbox</title>
+	<style type="text/css" media="screen">
+		.point {
+			width: 0;
+			height: 0;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+		}
+		.ship {
+			width: 50px;
+			height: 50px;
+			position: absolute;
+			z-index: 10;
+			top: 50%;
+			left: 50%;
+			margin-top: -25px;
+			margin-left: -25px;
+			border-radius: 100px;
+		}
+	</style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+
+
+	function RGBA() {
+		this.r = this.getRandom255();
+		this.g = this.getRandom255();
+		this.b = this.getRandom255();
+		this.a = 0.6;
+	}
+
+	RGBA.prototype.getRandom255 = function () {
+		return Math.round(Math.random() * 255);
+	};
+
+	RGBA.prototype.toString = function () {
+		return 'rgba(' +
+			this.r + ', ' +
+			this.g + ', ' +
+			this.b + ', ' +
+			this.a + ')';
+	};
+	
+
+
+	function Ship() {
+		this.color = new RGBA();
+		this.x = window.innerWidth / 2;
+		this.y = window.innerWidth / 2;
+		this.el = {};
+		this.el.point = document.createElement('div');
+		this.el.point.setAttribute('class', 'point');
+		this.el.ship = document.createElement('div');
+		this.el.ship.setAttribute('class', 'ship');
+		this.el.point.appendChild(this.el.ship);
+		document.body.appendChild(this.el.point);
+		this.draw();
+	}
+
+	Ship.prototype.draw = function () {
+		this.el.point.style.left = this.x + 'px';
+		this.el.point.style.top = this.y + 'px';
+		this.el.ship.style.backgroundColor = this.color.toString();
+	};
+
+	Ship.prototype.moveX = function(dx) {
+		this.x += dx;
+		this.draw();
+	};
+
+	Ship.prototype.moveY = function(dy) {
+		this.y += dy;
+		this.draw();
+	};
+
+	Ship.prototype.setColor = function(rgba) {
+		this.color = rgba;
+		this.draw();
+	};
+
+
+
+	var ship = new Ship();
+
+
+
+	window.addEventListener('keydown', function (e) {
+		var key = e.keyCode || e.which;
+		switch (key) {
+			case 32:
+				// spacebar
+				e.preventDefault();
+				ship.setColor(new RGBA());
+				break;
+			case 37:
+				// left arrow
+				e.preventDefault();
+				ship.moveX(-10);
+				break;
+			case 38:
+				// up arrow
+				e.preventDefault();
+				ship.moveY(-10);
+				break;
+			case 39:
+				// right arrow
+				e.preventDefault();
+				ship.moveX(10);
+				break;
+			case 40:
+				// down arrow
+				e.preventDefault();
+				ship.moveY(10);
+				break;
+		}
+	});
+
+</script>
+</body>
+</html>
