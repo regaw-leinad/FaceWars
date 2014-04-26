@@ -24,6 +24,7 @@
 	};
 
 	var Board = {};
+	Board.$el = $('#gameboard');
 	Board.width = window.innerWidth;
 	Board.height = window.innerHeight;
 	Board.centerX = Board.width / 2;
