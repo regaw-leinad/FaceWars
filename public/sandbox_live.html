@@ -90,6 +90,7 @@
 
 
 
+	//var socket = io.connect('http://localhost:1234');
 	var socket = io.connect('http://iuga.ischool.uw.edu:1234');
 
 	socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
@@ -151,14 +152,18 @@
 	});
 
 	// handle frame
+	var deathCount = 0;
 	function onFrame(time) {
 		
 		var dt = time - onFrame.oldTime;
 		onFrame.oldTime = time;
 
-		console.log(dt);
+		if (deathCount < 25) {
+			console.log(dt);
+			deathCount++;
+		}
 
-		handleMovement(16);
+		handleMovement(dt);
 
 		if (ownShipEntity) {
 			socket.emit(
@@ -327,8 +332,9 @@
 
 	function handleMovement(dt) {
 		if (!ownShipEntity) return;
+		dt = dt || 1;
 		var ship = ownShipEntity;
-		var speed = 100 / dt;
+		var speed = 0.5 * dt;
 		var slowdown = 3 / 4;
 		// up left
 		if (Keys.isDown(Keys.UP) && Keys.isDown(Keys.LEFT)) {
