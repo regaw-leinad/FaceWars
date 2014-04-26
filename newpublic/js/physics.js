@@ -6,7 +6,7 @@ function applyGravity(entity, dt) {
  
 	var dist = Math.sqrt(x_sqr + y_sqr);
  
-	var pull = 0.02 / dist;
+	var pull = 0.03 / dist;
 	//(x_d*x_d + y_d*y_d);
  
 	//if it has already rotated, make sure to premove
