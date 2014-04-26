@@ -62,7 +62,7 @@
 		// update projectiles
 		Object.keys(ownProjectilesById).forEach(function (id) {
 			var projectile = ownProjectilesById[id];
-			applyGravity(projectile, dt);
+			//applyGravity(projectile, dt);
 			socket.emit(
 				Packet.UPDATE_ENTITY, 
 				{ entity: projectile.getModel() }
