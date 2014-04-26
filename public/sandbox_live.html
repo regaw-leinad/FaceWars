@@ -125,8 +125,8 @@
 		// remove entities from DOM and reference
 		Object.keys(entitiesByID).forEach(function (entityID) {
 			if (entitiesByID[entityID].m.userName === data.user.name) {
-				entitiesByID[entityID].remove();
-				
+				entitiesByID[entityID].removeFromDOM();
+				delete entitiesByID[entityID];
 			}
 		});
 		// remove user from reference
@@ -250,9 +250,8 @@
 		this.draw();
 	};
 
-	Ship.prototype.remove = function () {
+	Ship.prototype.removeFromDOM = function () {
 		this.el.point.parentNode.removeChild(this.el.point);
-		delete entitiesByID[this.m.id];
 	};
 
 	Ship.prototype.getModel = function () {
@@ -418,7 +417,7 @@
 
 	    if(entity.m.x === Board.centerX &&
 	    	entity.m.y === Board.centerY) {
-	    	entity.remove();
+	    	// TODO
 	    }
 	}
 
