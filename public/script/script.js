@@ -1,11 +1,11 @@
-var packet = {
+var Packet = {
     USER_AUTH_NEW: 0,
     USER_AUTH_RESPONSE: 1,
     USER_JOIN_SESSION: 2,
     USER_LEAVE_SESSION: 3,
     USER_DISCONNECTING: 4,
     UPDATE_ENTITY: 5
-}
+};
 
 var currentUser;
 var socket;
@@ -13,7 +13,7 @@ var socket;
 $(document).ready(function() {
     socket = io.connect('http://localhost:1234');
 
-    socket.on(packet.USER_AUTH_RESPONSE, function(data) {
+    socket.on(Packet.USER_AUTH_RESPONSE, function(data) {
         if (data.err) {
             console.log(data.err);
             return;
@@ -27,7 +27,7 @@ $(document).ready(function() {
     $nameText = $('#nameText');
     $nameForm.on('submit', function (e) {
     	e.preventDefault();
-    	socket.emit(packet.USER_AUTH_NEW, {
+    	socket.emit(Packet.USER_AUTH_NEW, {
     		userName: $nameText.val()
     	});
     	$nameText.val('');
@@ -35,6 +35,6 @@ $(document).ready(function() {
 });
 
 $(window).bind('beforeunload', function(eventObject) {
-    socket.emit(packet.USER_DISCONNECTING, { user: currentUser });
+    socket.emit(Packet.USER_DISCONNECTING, { user: currentUser });
     //clearStoredData();
 });
