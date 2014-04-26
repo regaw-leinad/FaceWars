@@ -86,4 +86,15 @@ socket.on('connection', function(client) {
             // else ignore disconnect
         }
     });
+
+    client.on(Packet.CHAT_MESSAGE, function(data) {
+        console.log('Received CHAT_MESSAGE Packet');
+        console.log(data);
+
+        var registeredUserId = users.getUserIdBySocketId(client.id);
+        if (registeredUserId && registeredUserId === data.user.id) {
+            var session = sessions.getSessionByUser(user);
+            socket.sockets.in(session.id).emit(Packet.CHAT_MESSAGE, data);
+        }
+    })
 });
