@@ -9,6 +9,7 @@ function load() {
 	main.fadeIn()
 }
 
+
 function resize() {
 	var porthole = document.getElementById('porthole');
 	var circle = document.getElementById('circle');
