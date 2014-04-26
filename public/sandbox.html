@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,74 +23,237 @@
 			margin-top: -25px;
 			margin-left: -25px;
 			border-radius: 100px;
+			opacity: 0.6;
 		}
 	</style>
 </head>
 <body>
-
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/script/salt.js"></script>
 <script type="text/javascript">
 
 
 
-	function RGBA() {
-		this.r = this.getRandom255();
-		this.g = this.getRandom255();
-		this.b = this.getRandom255();
-		this.a = 0.6;
+	$(window).bind('beforeunload', function(eventObject) {
+	    socket.emit(Packet.USER_DISCONNECTING, { user: currentUser });
+	});
+
+
+	var Packet = {
+	    USER_AUTH_NEW: 0,
+	    USER_AUTH_RESPONSE: 1,
+	    USER_JOIN_SESSION: 2,
+	    USER_LEAVE_SESSION: 3,
+	    USER_DISCONNECTING: 4,
+	    UPDATE_ENTITY: 5
+	};
+
+
+
+
+
+
+	var EntityType = {
+		SHIP: 0,
+		PROJECTILE: 1
+	};
+
+
+
+	var entitiesByID = {};
+	var ownProjectilesById = {};
+	var ownShipEntity;
+
+	var currentUser = {
+		id: undefined,
+		name: undefined,
+		color: undefined
+	};
+
+	var currentSession = {
+		id: undefined,
+		users: []
+	};
+
+	var entityExample = {
+		userName: undefined,
+		elementId: undefined,
+		type: undefined,
+		x: undefined,
+		y: undefined,
+		dx: undefined,
+		dy: undefined,
+		speed: undefined,
+		shipRotation: undefined,
+		moveRotation: undefined
+	};
+
+
+
+	//var socket = io.connect('http://localhost:1234');
+	var socket = io.connect('http://iuga.ischool.uw.edu:1234');
+
+	socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
+		if (data.err) {
+			console.error(data.err);
+			return;
+		}
+
+		currentUser = data.user;
+		currentSession = data.session;
+
+		console.log('auth success');
+		console.log(currentUser);
+		console.log(currentSession);
+
+		ownShipEntity = new Ship(Ship.createNewDataFromUser(currentUser));
+		entitiesByID[ownShipEntity.getId()] = ownShipEntity;
+
+		// begin packet loop
+		onFrame.oldTime = (new Date()).getTime();
+		onFrame((new Date()).getTime());
+
+	});
+
+	socket.emit(Packet.USER_AUTH_NEW, {
+		userName: salt(10),
+		color: '#' + Math.floor(Math.random() * 16777215).toString(16)
+	});
+
+	socket.on(Packet.USER_JOIN_SESSION, function (data) {
+		// add user to current session
+		currentSession.users[data.user.id] = data.user;
+	});
+
+	socket.on(Packet.USER_LEAVE_SESSION, function (data) {
+		// remove entities from DOM and reference
+		Object.keys(entitiesByID).forEach(function (entityID) {
+			if (entitiesByID[entityID].m.userName === data.user.name) {
+				entitiesByID[entityID].removeFromDOM();
+				delete entitiesByID[entityID];
+			}
+		});
+		// remove user from reference
+		delete currentSession.users[data.user.id];
+	});
+
+	socket.on(Packet.UPDATE_ENTITY, function (data) {
+		if (entitiesByID[data.entity.id]) {
+			if (data.entity.type === EntityType.SHIP) {
+				entitiesByID[data.entity.id].update(data.entity);
+				if (data.entity.userName === currentUser.name) {
+					// packet loop lols
+					onFrame((new Date()).getTime());
+				}
+			}
+		} else {
+			entitiesByID[data.entity.id] = new Ship(data.entity);
+		}
+	});
+
+	// handle frame
+	function onFrame(time) {
+		
+		var dt = time - onFrame.oldTime;
+		onFrame.oldTime = time;
+
+		handleMovement(dt);
+
+		if (ownShipEntity) {
+			socket.emit(
+				Packet.UPDATE_ENTITY, 
+				{ entity: ownShipEntity.getModel() }
+			);
+		}
+
+		Object.keys(ownProjectilesById).forEach(function (id) {
+			socket.emit(
+				Packet.UPDATE_ENTITY, 
+				{ entity: ownProjectilesById[id].getModel() }
+			);
+		});
+
+		Keys.update();
 	}
 
-	RGBA.prototype.getRandom255 = function () {
-		return Math.round(Math.random() * 255);
-	};
-
-	RGBA.prototype.toString = function () {
-		return 'rgba(' +
-			this.r + ', ' +
-			this.g + ', ' +
-			this.b + ', ' +
-			this.a + ')';
-	};
 
 
 
-	function Ship() {
-		this.color = new RGBA();
-		this.x = window.innerWidth / 2;
-		this.y = window.innerWidth / 2;
+
+	function Ship(data) {
+		
+		this.m = {};
+		this.m.id = data.id;
+		this.m.color = data.color;
+		this.m.userName = data.userName;
+		this.m.x = data.x;
+		this.m.y = data.y;
+		this.m.type = data.type;
+		
 		this.el = {};
 		this.el.point = document.createElement('div');
+		this.el.point.setAttribute('id', this.m.id);
 		this.el.point.setAttribute('class', 'point');
 		this.el.ship = document.createElement('div');
 		this.el.ship.setAttribute('class', 'ship');
+		this.el.ship.style.backgroundColor = this.m.color;
+		
 		this.el.point.appendChild(this.el.ship);
 		document.body.appendChild(this.el.point);
+
 		this.draw();
+
 	}
 
+	Ship.createNewDataFromUser = function (user) {
+		var data = {};
+		data.id = (new Date()).getTime() + '-' + salt();
+		data.color = user.color;
+		data.userName = user.name;
+		data.x = 10;
+		data.y = 10;
+		data.type = EntityType.SHIP;
+		return data;
+	};
+
 	Ship.prototype.draw = function () {
-		this.el.point.style.left = this.x + 'px';
-		this.el.point.style.top = this.y + 'px';
-		this.el.ship.style.backgroundColor = this.color.toString();
+		this.el.point.style.left = this.m.x + 'px';
+		this.el.point.style.top = this.m.y + 'px';
+	};
+
+	Ship.prototype.update = function (model) {
+		this.m = model;
+		this.draw();
+	};
+
+	Ship.prototype.removeFromDOM = function () {
+		this.el.point.parentNode.removeChild(this.el.point);
+	};
+
+	Ship.prototype.getModel = function () {
+		return this.m;
+	};
+
+	Ship.prototype.getType = function () {
+		return this.m.type;
+	};
+
+	Ship.prototype.getId = function () {
+		return this.m.id;
 	};
 
 	Ship.prototype.moveX = function(dx) {
-		this.x += dx;
-		this.draw();
+		this.m.x += dx;
 	};
 
 	Ship.prototype.moveY = function(dy) {
-		this.y += dy;
-		this.draw();
+		this.m.y += dy;
 	};
 
-	Ship.prototype.setColor = function(rgba) {
-		this.color = rgba;
-		this.draw();
+	Ship.prototype.setColor = function(color) {
+		this.m.color = color;
 	};
-
-
-
-	var ship = new Ship();
 
 
 
@@ -126,14 +290,6 @@
 		return {
 			// update on frame
 			update: function () {
-				/*
-				Object.keys(keyIsDown).forEach(function (keyCode) {
-					console.log('downed keyCode = ' + keyCode);
-				});
-				Object.keys(keyIsPressed).forEach(function (keyCode) {
-					console.log('pressed keyCode = ' + keyCode);
-				});
-				*/
 				// reset presses
 				keyIsPressed = {};
 			},
@@ -162,7 +318,10 @@
 
 
 	function handleMovement(dt) {
-		var speed = 10;
+		if (!ownShipEntity) return;
+		dt = dt || 1;
+		var ship = ownShipEntity;
+		var speed = 0.5 * dt;
 		var slowdown = 3 / 4;
 		// up left
 		if (Keys.isDown(Keys.UP) && Keys.isDown(Keys.LEFT)) {
@@ -208,25 +367,6 @@
 		}
 	}
 
-
-
-
-	// handle frame 
-	function onFrame(time) {
-
-		var dt = time - onFrame.oldTime;
-		handleMovement(dt);
-
-		if (Keys.isPressed(Keys.SPACEBAR)) {
-			ship.setColor(new RGBA());
-		}
-		
-		Keys.update();
-		requestAnimationFrame(onFrame);
-	}
-	// start frame handling
-	onFrame.oldTime = (new Date()).getTime();
-	requestAnimationFrame(onFrame);
 
 
 

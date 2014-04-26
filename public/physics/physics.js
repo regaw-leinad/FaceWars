@@ -18,6 +18,7 @@ $(document).ready(function() {
     	enterMsg.val('');
     });
     var object = new Entity();
+    update("Current x: " + object.x)
 
     console.log(object.centerX);
     console.log(object.centerY);
