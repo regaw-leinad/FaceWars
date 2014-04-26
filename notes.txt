@@ -54,5 +54,5 @@ NEW ENTITY PACKET
 - dx
 - dy
 - shipRotation
-- userID
+- userName (user.name is the object ID)
 - visibility (T/F)
