@@ -11,6 +11,7 @@
 	var entitiesByID = {};
 	var ownProjectilesById = {};
 	var ownShipEntity;
+	var ammoAmt = 5;
 
 	var currentUser = {
 		id: undefined,
@@ -43,7 +44,7 @@
 		onFrame.oldTime = time;
 
 		// handle user keyboard input
-		handleInput(dt);
+		handleInput(8);
 
 		// update ship
 		if (ownShipEntity) {
@@ -76,7 +77,7 @@
 		dt = dt || 1;
 		var ship = ownShipEntity;
 		var speed = 0.3 * dt * 0.05;
-		var rotation = 0.6;
+		var rotation = 5;
 
 		// left
 		if (Keys.isDown(Keys.LEFT)) {
@@ -100,7 +101,10 @@
 
 		// space
 		if (Keys.isPressed(Keys.SPACEBAR)) {
-			// fire projectile
+			var bullet = new Projectile(Projectile.createNewDataFromUser(currentUser, 
+				ownShipEntity.m, ownShipEntity.dx, ownShipEntity.dy));
+			entitiesByID[bullet.m.id] = bullet;
+			ownProjectilesById[bullet.m.id] = bullet;
 		}
 
 	}
