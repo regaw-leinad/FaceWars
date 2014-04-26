@@ -34,11 +34,31 @@ function applyGravity(entity, dt) {
 	
     entity.m.x += entity.dx * dt;
     entity.m.y += entity.dy * dt;
- 
-    if (entity.m.x === Board.centerX &&
-    	entity.m.y === Board.centerY) {
-    	// TODO
+}
+
+function checkCollisions() {
+    Object.keys(ownProjectilesById).forEach(function (projId) {
+        var p = ownProjectilesById[projId];
+
+        Object.keys(entitiesByID).forEach(function(entityId) {
+            var entity = entitiesByID[entityId];
+            if (entity.m.id !== p.m.id && entity.m.userName !== p.m.userName) {
+                // check collision here
+                if (isInsideCircle(p.m.x, p.m.y, entity.m.x, entity.m.y, 12.5)) {
+                    console.log('emitting ENTITY_DIE for projectile');
+                    socket.emit(Packet.ENTITY_DIE, { entity: entity.m });
+                }
+            }
+        });
+    });
+
+    var c = ownShipEntity;
+    if (isInsideCircle(c.m.x, c.m.y, Board.centerX, Board.centerY, 30)) {
+        console.log('emitting ENTITY_DIE for player ship');
+        socket.emit(Packet.ENTITY_DIE, { entity: c.m });
     }
- 
- 
+}
+
+function isInsideCircle(x, y, cx, cy, rad) {
+    return Math.pow(x - cx, 2) + Math.pow(y - cy, 2) < Math.pow(rad, 2);
 }
