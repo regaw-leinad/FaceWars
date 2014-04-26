@@ -206,13 +206,9 @@
 		this.m.x = data.x;
 		this.m.y = data.y;
 		this.m.type = data.type;
-		this.m.dx = 0;
-		this.m.dy = 0;
 
-		this.gameWidth = window.innerWidth;
-		this.gameHeight = window.innerHeight;
-		this.centerX = this.gameWidth / 2;
-		this.centerY = this.gameHeight / 2;
+		this.dx = 0;
+		this.dy = 0;
 		
 		this.el = {};
 		this.el.point = document.createElement('div');
@@ -403,23 +399,31 @@
 		//if it has already rotated, make sure to premove
 		//this.preMove(delta);
 
-		/*entity.m.dx += (
+		entity.dx += (
 			//x_sqr*pull
 			x_d*pull
 		);
-	    entity.m.dy += (
+
+	    entity.dy += (
 	    	//y_sqr*pull
 	    	y_d*pull
 	    );
-		*/
 
-	    entity.moveX(x_d * pull * dt);
-	    entity.moveY(y_d * pull * dt);
+	    var speed = Math.sqrt(entity.dx*entity.dx + entity.dy*entity.dy);
+	    if(speed > 1) {
+	    	entity.dx *= 0.9;
+	    	entity.dy *= 0.9;
+	    }
+		
+	    entity.moveX(entity.dx * dt);
+	    entity.moveY(entity.dy * dt);
 
 	    if(entity.m.x === Board.centerX &&
 	    	entity.m.y === Board.centerY) {
 	    	entity.remove();
 	    }
+
+
 	}
 
 
