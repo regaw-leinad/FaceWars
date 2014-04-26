@@ -1,5 +1,5 @@
 function Ship(data) {
-	
+
 	this.m = {};
 	this.m.id = data.id;
 	this.m.color = data.color;
@@ -7,6 +7,8 @@ function Ship(data) {
 	this.m.x = data.x;
 	this.m.y = data.y;
 	this.m.type = data.type;
+	this.m.shipRotation = data.shipRotation;
+	this.m.moveRotation = data.moveRotation;
 
 	this.dx = 0;
 	this.dy = 0;
@@ -17,12 +19,15 @@ function Ship(data) {
 	this.el.point.setAttribute('class', 'point');
 	this.el.ship = document.createElement('div');
 	this.el.ship.setAttribute('class', 'ship');
-	this.el.ship.style.backgroundColor = this.m.color;
+	this.el.ship.style.borderColor = 'transparent transparent transparent ' + this.m.color;
+	this.el.label = document.createElement('div');
+	this.el.label.setAttribute('class', 'label');
+	this.el.label.innerHTML = this.m.userName;
+	this.el.label.style.color = this.m.color;
 	
 	this.el.point.appendChild(this.el.ship);
-	$('#gameboard').append(this.el.point);
-
-	//document.body.appendChild(this.el.point);
+	this.el.point.appendChild(this.el.label);
+	Board.$el.append(this.el.point);
 
 	this.draw();
 
@@ -36,12 +41,19 @@ Ship.createNewDataFromUser = function (user) {
 	data.x = 10;
 	data.y = 10;
 	data.type = EntityType.SHIP;
+	data.shipRotation = 70;
+	data.moveRotation = 70;
 	return data;
 };
 
 Ship.prototype.draw = function () {
 	this.el.point.style.left = this.m.x + 'px';
 	this.el.point.style.top = this.m.y + 'px';
+	this.el.ship.style.webkitTransform = 'rotate('+this.m.shipRotation+'deg)';
+    this.el.ship.style.mozTransform    = 'rotate('+this.m.shipRotation+'deg)';
+    this.el.ship.style.msTransform     = 'rotate('+this.m.shipRotation+'deg)';
+    this.el.ship.style.oTransform      = 'rotate('+this.m.shipRotation+'deg)';
+    this.el.ship.style.transform       = 'rotate('+this.m.shipRotation+'deg)';
 };
 
 Ship.prototype.update = function (model) {
@@ -65,12 +77,18 @@ Ship.prototype.getId = function () {
 	return this.m.id;
 };
 
-Ship.prototype.moveX = function(dx) {
-	this.m.x += dx;
+Ship.prototype.thrust = function(amount) {
+	var rad = this.m.shipRotation * Math.PI / 180;
+	this.dx += amount * Math.cos(rad);
+	this.dy += amount * Math.sin(rad);
 };
 
-Ship.prototype.moveY = function(dy) {
-	this.m.y += dy;
+Ship.prototype.rotateCCW = function(deg) {
+	this.m.shipRotation -= deg;
+};
+
+Ship.prototype.rotateCW = function(deg) {
+	this.m.shipRotation += deg;
 };
 
 Ship.prototype.setColor = function(color) {

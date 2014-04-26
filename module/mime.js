@@ -6,7 +6,8 @@ var extMap = {
     '.txt':  'text/plain',
     '.png':  'image/png',
     '.js':   'application/javascript',
-    '.css':  'text/css'
+    '.css':  'text/css',
+    '.ttf':  'font/opentype'
 };
 
 var defaultMime = extMap['.html'];

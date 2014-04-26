@@ -11,6 +11,7 @@
 	var entitiesByID = {};
 	var ownProjectilesById = {};
 	var ownShipEntity;
+	var ammoAmt = 5;
 
 	var currentUser = {
 		id: undefined,
@@ -24,10 +25,17 @@
 	};
 
 	var Board = {};
+	Board.$el = $('#gameboard');
 	Board.width = window.innerWidth;
 	Board.height = window.innerHeight;
 	Board.centerX = Board.width / 2;
 	Board.centerY = Board.height / 2;
+	$(window).on('resize', function (e) {
+		Board.width = window.innerWidth;
+		Board.height = window.innerHeight;
+		Board.centerX = Board.width / 2;
+		Board.centerY = Board.height / 2;
+	});
 
 	// handle frame
 	function onFrame(time) {
@@ -35,24 +43,34 @@
 		var dt = time - onFrame.oldTime;
 		onFrame.oldTime = time;
 
-		handleInput(dt);
+		// handle user keyboard input
+		handleInput(8);
 
-		applyGravity(ownShipEntity, dt);
-
+		// update ship
 		if (ownShipEntity) {
+			applyGravity(ownShipEntity, dt);
+			if(ownShipEntity.speed > 0.3) {
+				ownShipEntity.speed = 0.3;
+			}
 			socket.emit(
 				Packet.UPDATE_ENTITY, 
 				{ entity: ownShipEntity.getModel() }
 			);
 		}
 
+		// update projectiles
 		Object.keys(ownProjectilesById).forEach(function (id) {
+			var projectile = ownProjectilesById[id];
+			applyGravity(projectile, dt);
 			socket.emit(
 				Packet.UPDATE_ENTITY, 
-				{ entity: ownProjectilesById[id].getModel() }
+				{ entity: projectile.getModel() }
 			);
 		});
 
+		checkCollisions();
+
+		// update keyboard handler
 		Keys.update();
 	}
 
@@ -60,49 +78,35 @@
 		if (!ownShipEntity) return;
 		dt = dt || 1;
 		var ship = ownShipEntity;
-		var speed = 0.3 * dt;
-		var slowdown = 3 / 4;
+		var speed = 0.3 * dt * 0.05;
+		var rotation = 5;
 
-		// up left
-		if (Keys.isDown(Keys.UP) && Keys.isDown(Keys.LEFT)) {
-			speed = speed * slowdown;
-			ship.moveX(-speed);
-			ship.moveY(-speed);
+		// left
+		if (Keys.isDown(Keys.LEFT)) {
+			ship.rotateCCW(rotation);
 		}
-		// up right
-		else if (Keys.isDown(Keys.UP) && Keys.isDown(Keys.RIGHT)) {
-			speed = speed * slowdown;
-			ship.moveX(speed);
-			ship.moveY(-speed);
+
+		// right
+		if (Keys.isDown(Keys.RIGHT)) {
+			ship.rotateCW(rotation);
 		}
-		// down left
-		else if (Keys.isDown(Keys.DOWN) && Keys.isDown(Keys.LEFT)) {
-			speed = speed * slowdown;
-			ship.moveX(-speed);
-			ship.moveY(speed);
+
+		// up
+		if (Keys.isDown(Keys.UP)) {
+			ship.thrust(speed);
 		}
-		// down right
-		else if (Keys.isDown(Keys.DOWN) && Keys.isDown(Keys.RIGHT)) {
-			speed = speed * slowdown;
-			ship.moveX(speed);
-			ship.moveY(speed);
-		} 
-		else {
-			// left
-			if (Keys.isDown(Keys.LEFT)) {
-				ship.moveX(-speed);
-			}
-			// right
-			if (Keys.isDown(Keys.RIGHT)) {
-				ship.moveX(speed);
-			}
-			// up
-			if (Keys.isDown(Keys.UP)) {
-				ship.moveY(-speed);
-			}
-			// down
-			if (Keys.isDown(Keys.DOWN)) {
-				ship.moveY(speed);
-			}
+
+		// down
+		if (Keys.isDown(Keys.DOWN)) {
+			ship.thrust(-speed);
 		}
+
+		// space
+		if (Keys.isPressed(Keys.SPACEBAR)) {
+			var bullet = new Projectile(Projectile.createNewDataFromUser(currentUser, 
+				ownShipEntity.m, ownShipEntity.dx, ownShipEntity.dy));
+			entitiesByID[bullet.m.id] = bullet;
+			ownProjectilesById[bullet.m.id] = bullet;
+		}
+
 	}

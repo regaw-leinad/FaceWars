@@ -71,8 +71,21 @@ socket.on(Packet.UPDATE_ENTITY, function (data) {
 				// packet loop lols
 				onFrame((new Date()).getTime());
 			}
+		} else if (data.entity.type === EntityType.PROJECTILE) {
+			entitiesByID[data.entity.id].update(data.entity);
+			if(data.entity.userName === currentUser.name) {
+				onFrame((new Date()).getTime());
+			}
 		}
-	} else {
+	} else if (data.entity.type === EntityType.SHIP) {
 		entitiesByID[data.entity.id] = new Ship(data.entity);
 	}
+});
+
+socket.on(Packet.ENTITY_DIE, function (data) {
+	entitiesByID[data.entity.id].removeFromDOM();
+	delete entitiesByID[data.entity.id];
+
+	// TODO explosion
+	
 });

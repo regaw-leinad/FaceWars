@@ -8,32 +8,50 @@ function Projectile(data) {
 	this.m.y = data.y;
 	this.m.type = data.type;
 
-	this.dx = 0;
-	this.dy = 0;
+	this.dx = data.dx;
+	this.dy = data.dy;
 	
 	this.el = {};
 	this.el.point = document.createElement('div');
 	this.el.point.setAttribute('id', this.m.id);
 	this.el.point.setAttribute('class', 'point');
-	this.el.Projectile = document.createElement('div');
-	this.el.Projectile.setAttribute('class', 'projectile');
-	this.el.Projectile.style.backgroundColor = this.m.color;
+	this.el.projectile = document.createElement('div');
+	this.el.projectile.setAttribute('class', 'projectile');
+	this.el.projectile.style.backgroundColor = this.m.color;
 	
-	this.el.point.appendChild(this.el.Projectile);
-	document.body.appendChild(this.el.point);
+	this.el.point.appendChild(this.el.projectile);
+	Board.$el.append(this.el.point);
 
 	this.draw();
 
+	var self = this;
+
+	setTimeout(function() {
+		if(entitiesByID[self.m.id]) {
+			self.removeFromDOM();
+			delete entitiesByID[self.m.id];
+			delete ownProjectilesById[self.m.id];
+			socket.emit(
+				Packet.ENTITY_DIE, 
+				{ entity: self.m }
+			);
+		}
+
+	}, 4000);
+
 }
 
-Projectile.createNewDataFromUser = function (user) {
+Projectile.createNewDataFromUser = function (user, shipModel, dx, dy) {
 	var data = {};
 	data.id = (new Date()).getTime() + '-' + salt();
 	data.color = user.color;
 	data.userName = user.name;
-	data.x = 10;
-	data.y = 10;
+	data.x = shipModel.x;
+	data.y = shipModel.y;
 	data.type = EntityType.PROJECTILE;
+	var rad = shipModel.shipRotation * Math.PI / 180;
+	data.dx = 2 * Math.cos(rad) + dx; 
+	data.dy = 2 * Math.sin(rad) + dy;
 	return data;
 };
 
@@ -44,6 +62,8 @@ Projectile.prototype.draw = function () {
 
 Projectile.prototype.update = function (model) {
 	this.m = model;
+	this.m.x += dx;
+	this.m.y += dy;
 	this.draw();
 };
 
@@ -61,14 +81,6 @@ Projectile.prototype.getType = function () {
 
 Projectile.prototype.getId = function () {
 	return this.m.id;
-};
-
-Projectile.prototype.moveX = function(dx) {
-	this.m.x += dx;
-};
-
-Projectile.prototype.moveY = function(dy) {
-	this.m.y += dy;
 };
 
 Projectile.prototype.setColor = function(color) {

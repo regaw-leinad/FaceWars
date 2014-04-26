@@ -106,9 +106,22 @@ li img {
 	width: 0;
 	height: 0;
 	position: absolute;
+	top: 10px;
+	left: 10px;
+}
+.projectile {
+	width: 10px;
+	height: 10px;
+	position: absolute;
+	z-index: 5;
 	top: 50%;
 	left: 50%;
+	margin-top: -5px;
+	margin-left: -5px;
+	border-radius: 10px;
+	opacity: 0.6;
 }
+/*
 .ship {
 	width: 50px;
 	height: 50px;
@@ -120,6 +133,27 @@ li img {
 	margin-left: -25px;
 	border-radius: 100px;
 	opacity: 0.6;
+}
+*/
+.ship {
+	width: 0px;
+	height: 0px;
+	position: absolute;
+	top: -12.5px;
+	right: -17.5px;
+	border-style: solid;
+	border-width: 12.5px 0 12.5px 35px;
+	border-color: transparent transparent transparent #007bff;
+}
+
+.label {
+	width: auto;
+	height: 15px;
+	font-size: 12px;
+	font-weight: bold;
+	position: absolute;
+	top: -40px;
+	right: -40px;
 }
 
 #star, #star-container {
