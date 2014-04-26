@@ -403,7 +403,7 @@
 		//if it has already rotated, make sure to premove
 		//this.preMove(delta);
 
-		entity.m.dx += (
+		/*entity.m.dx += (
 			//x_sqr*pull
 			x_d*pull
 		);
@@ -411,12 +411,13 @@
 	    	//y_sqr*pull
 	    	y_d*pull
 	    );
-	    entity.moveX(entity.m.dx * dt);
-	    entity.moveY(entity.m.dy * dt);
+		*/
+
+	    entity.moveX(x_d * pull * dt);
+	    entity.moveY(y_d * pull * dt);
 
 	    if(entity.m.x === Board.centerX &&
 	    	entity.m.y === Board.centerY) {
-	    	// hit sun, remove entity
 	    	entity.remove();
 	    }
 	}
