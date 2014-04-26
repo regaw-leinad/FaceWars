@@ -9,8 +9,8 @@ var Packet = {
     ENTITY_DIE: 7
 };
 
-//var socket = io.connect('http://localhost:1234');
-var socket = io.connect('http://iuga.ischool.uw.edu:1234');
+var socket = io.connect('http://localhost:1234');
+//var socket = io.connect('http://iuga.ischool.uw.edu:1234');
 
 socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 	if (data.err) {
@@ -77,9 +77,6 @@ socket.on(Packet.UPDATE_ENTITY, function (data) {
 			}
 		} else if (data.entity.type === EntityType.PROJECTILE) {
 			entitiesByID[data.entity.id].update(data.entity);
-			if(data.entity.userName === currentUser.name) {
-				onFrame((new Date()).getTime());
-			}
 		}
 	} else if (data.entity.type === EntityType.SHIP) {
 		entitiesByID[data.entity.id] = new Ship(data.entity);
