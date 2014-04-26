@@ -22,7 +22,7 @@ function Ship(data) {
 	this.el.ship.style.backgroundColor = this.m.color;
 	
 	this.el.point.appendChild(this.el.ship);
-	Board.$el.appendChild(this.el.point);
+	Board.$el.append(this.el.point);
 
 	this.draw();
 
