@@ -68,6 +68,8 @@
 			);
 		});
 
+		checkCollisions();
+
 		// update keyboard handler
 		Keys.update();
 	}
