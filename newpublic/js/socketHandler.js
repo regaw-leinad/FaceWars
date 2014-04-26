@@ -79,7 +79,7 @@ socket.on(Packet.UPDATE_ENTITY, function (data) {
 				onFrame((new Date()).getTime());
 			}
 		}
-	} else {
+	} else if (data.entity.type === EntityType.SHIP) {
 		entitiesByID[data.entity.id] = new Ship(data.entity);
 	}
 });
