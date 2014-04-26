@@ -153,16 +153,10 @@
 	});
 
 	// handle frame
-	var deathCount = 0;
 	function onFrame(time) {
 		
 		var dt = time - onFrame.oldTime;
 		onFrame.oldTime = time;
-
-		if (deathCount < 25) {
-			console.log(dt);
-			deathCount++;
-		}
 
 		handleInput(dt);
 		applyGravity(ownShipEntity, dt);
