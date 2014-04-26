@@ -1,7 +1,8 @@
 <!doctype html>
 <html>
 <head>
-	<title>FaceWars</title>
+	<title>SPACEWAR 2014</title>
+	<link rel="icon" type="image/png" href="img/sun.png" />
 	<link rel="stylesheet" href="css/reset.css"/>
 	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="css/styles.css"/>
@@ -9,15 +10,26 @@
 </head>
 <body>
 	<div id="layer0">
-		<div id="filler">
 
-		</div>
-		<h1>FACEWAR!</h1>
+		<h1>SPACEWAR 2014</h1>
 		<p>pick a username</p>
 		<input id="username" class="form-control init-input" type="text" name="username">
 		<p>pick a color</p>
 		<input id="color" class="form-control init-input" type="color" value="#FF0000">
 		<button class="btn btn-default" id="submit" type="button">SHOOT SHIT!</button>
+	</div>
+
+	<div id="gameboard">
+		<svg height="100%" width="100%">
+			<defs>
+				<radialGradient id="grad2" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+					<stop offset="0%" style="stop-color:rgb(255,255,255);
+					stop-opacity:1" />
+					<stop offset="100%" style="stop-color:rgb(255,255,0);stop-opacity:1" />
+				</radialGradient>
+			</defs>
+			<circle id="star" r="30" fill="url(#grad2)"/>
+		</svg>
 	</div>
 
 	<div id="layer1">

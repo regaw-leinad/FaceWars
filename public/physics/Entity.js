@@ -36,7 +36,7 @@ function Entity(type, ID) {
 	document.body.appendChild(this.el.point);
 	this.draw();
 
-};
+}
 
 // on every frame do this run function
 Entity.prototype.run = function(delta) {
