@@ -261,3 +261,8 @@ li img {
 	margin: 4px;
 	text-align: right;
 }
+
+#color {
+	position: relative;
+	top: 8px;
+}
