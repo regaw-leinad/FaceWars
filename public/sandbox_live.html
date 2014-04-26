@@ -109,7 +109,8 @@
 		entitiesByID[ownShipEntity.getId()] = ownShipEntity;
 
 		// begin packet loop
-		onFrame();
+		onFrame.oldTime = (new Date()).getTime();
+		onFrame((new Date()).getTime());
 
 	});
 
@@ -124,7 +125,7 @@
 				entitiesByID[data.entity.id].update(data.entity);
 				if (data.entity.userName === currentUser.name) {
 					// packet loop lols
-					onFrame();
+					onFrame((new Date()).getTime());
 				}
 			}
 		} else {
@@ -135,10 +136,10 @@
 	// handle frame
 	function onFrame(time) {
 		
-		//var dt = time - onFrame.oldTime;
-		//onFrame.oldTime = time;
+		var dt = time - onFrame.oldTime;
+		onFrame.oldTime = time;
 
-		handleMovement(250);
+		handleMovement(16);
 
 		if (ownShipEntity) {
 			socket.emit(
@@ -147,17 +148,15 @@
 			);
 		}
 
-		Object.keys(ownProjectilesById).forEach(function (key) {
+		Object.keys(ownProjectilesById).forEach(function (id) {
 			socket.emit(
 				Packet.UPDATE_ENTITY, 
-				{ entity: ownProjectilesById[key].getModel() }
+				{ entity: ownProjectilesById[id].getModel() }
 			);
 		});
 
 		Keys.update();
 	}
-	// start frame handling
-	//onFrame.oldTime = 0;
 
 
 
