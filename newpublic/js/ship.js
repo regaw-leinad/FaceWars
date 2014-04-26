@@ -20,8 +20,13 @@ function Ship(data) {
 	this.el.ship = document.createElement('div');
 	this.el.ship.setAttribute('class', 'ship');
 	this.el.ship.style.borderColor = 'transparent transparent transparent ' + this.m.color;
+	this.el.label = document.createElement('div');
+	this.el.label.setAttribute('class', 'label');
+	this.el.label.innerHTML = this.m.userName;
+	this.el.label.style.color = this.m.color;
 	
 	this.el.point.appendChild(this.el.ship);
+	this.el.point.appendChild(this.el.label);
 	Board.$el.append(this.el.point);
 
 	this.draw();
@@ -76,7 +81,6 @@ Ship.prototype.thrust = function(amount) {
 	var rad = this.m.shipRotation * Math.PI / 180;
 	this.dx += amount * Math.cos(rad);
 	this.dy += amount * Math.sin(rad);
-
 };
 
 Ship.prototype.rotateCCW = function(deg) {

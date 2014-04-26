@@ -83,3 +83,11 @@ socket.on(Packet.UPDATE_ENTITY, function (data) {
 		entitiesByID[data.entity.id] = new Ship(data.entity);
 	}
 });
+
+socket.on(Packet.ENTITY_DIE, function (data) {
+	entitiesByID[data.entity.id].removeFromDOM();
+	delete entitiesByID[data.entity.id];
+
+	// TODO explosion
+	
+});

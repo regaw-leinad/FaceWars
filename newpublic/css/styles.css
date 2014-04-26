@@ -141,6 +141,16 @@ li img {
 	border-color: transparent transparent transparent #007bff;
 }
 
+.label {
+	width: auto;
+	height: 15px;
+	font-size: 12px;
+	font-weight: bold;
+	position: absolute;
+	top: -40px;
+	right: -40px;
+}
+
 /*#follower {
 	z-index: 0;
 	position: absolute;
