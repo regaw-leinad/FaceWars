@@ -5,15 +5,17 @@
 	src: url('../other/nasa.ttf') format('truetype');
 }
 
-
 html, body {
 	height: 100%;
 	margin: 0 auto;
 	overflow: hidden;
 	color: #FFF;
 	font-size: 50px;
+
 	min-width: 1000px;
-   width:1000px;     
+   	width:1000px;
+   	max-width: 1000px;
+   	max-height: 800px;    
 }
 
 body {

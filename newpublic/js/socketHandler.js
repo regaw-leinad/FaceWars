@@ -9,8 +9,8 @@ var Packet = {
     ENTITY_DIE: 7
 };
 
-var socket = io.connect('http://localhost:1234');
-//var socket = io.connect('http://iuga.ischool.uw.edu:1234');
+//var socket = io.connect('http://localhost:1234');
+var socket = io.connect('http://iuga.ischool.uw.edu:1234');
 
 socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 	if (data.err) {
@@ -83,9 +83,9 @@ socket.on(Packet.UPDATE_ENTITY, function (data) {
 });
 
 socket.on(Packet.ENTITY_DIE, function (data) {
-	entitiesByID[data.entity.id].removeFromDOM();
-	delete entitiesByID[data.entity.id];
-
+	if (entitiesByID[data.entity.id]) {
+		entitiesByID[data.entity.id].removeFromDOM();
+		delete entitiesByID[data.entity.id];
+	}
 	// TODO explosion
-	
 });
