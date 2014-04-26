@@ -1,17 +1,20 @@
 var packet = {
-    USER_POSITION_UPDATE: '0',
-
+    SPAWN_ENTITY: '0',
+    GAME_START: '1'
 }
+
+module.exports = packet;
 
 /*
     ============
     | Protocol | 
     ============
+    
+    // Sent from client to server
+    SPAWN_ENTITY:
+        data { type: '', id: timeStamp, x: #, y: #, dx: #, dy: # }
 
-    // Sent from the client to the server to notify the new position of the user
-    // Also, broadcasted to all clients when received by the server
-    // Client -> Server
-    // Server -> Client
-    USER_POSITION:
-        data {  }
+    GAME_START:
+
+
 */ 

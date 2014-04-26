@@ -1,8 +1,9 @@
 var crypto = require('crypto');
 
-function User(name, socketId) {
+function User(name, color, socketId) {
     this.displayName = name;
     this.name = name.toLowerCase();
+    this.color = color;
     this.id = crypto.createHash('md5').update(this.name).digest('hex');
     this.socketId = socketId;
 }
@@ -13,6 +14,10 @@ User.prototype.getDisplayName = function() {
 
 User.prototype.getSocketId = function() {
     return this.socketId;
+};
+
+User.prototype.getColor = function() {
+    return this.color;
 };
 
 User.prototype.setDisplayName = function(name) {

@@ -17,3 +17,5 @@ UserStore.prototype.removeUser = function(user) {
 UserStore.prototype.getUserIdBySocketId = function(socketId) {
     return this.userSockets[socketId];
 };
+
+module.exports = UserStore;
