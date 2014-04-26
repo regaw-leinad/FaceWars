@@ -200,9 +200,12 @@
 		this.m.x = data.x;
 		this.m.y = data.y;
 		this.m.type = data.type;
+		
+		//rotation is in degrees
+		this.m.rotation = data.rotation;
 
 		this.dx = 0;
-		this.dy = 0;
+		this.dy = 0.001;
 		
 		this.el = {};
 		this.el.point = document.createElement('div');
@@ -224,8 +227,8 @@
 		data.id = (new Date()).getTime() + '-' + salt();
 		data.color = user.color;
 		data.userName = user.name;
-		data.x = 10;
-		data.y = 10;
+		data.x = 15;
+		data.y = 500;
 		data.type = EntityType.SHIP;
 		return data;
 	};
@@ -331,7 +334,7 @@
 		if (!ownShipEntity) return;
 		dt = dt || 1;
 		var ship = ownShipEntity;
-		var speed = 0.5 * dt;
+		var speed = 0.08 * dt;
 		var slowdown = 3 / 4;
 
 		// up left
@@ -386,7 +389,7 @@
 
 		var dist = Math.sqrt(x_sqr + y_sqr);
 
-		var pull = 1 / dist;
+		var pull = 0.0001 / dist;
 		//(x_d*x_d + y_d*y_d);
 
 		//if it has already rotated, make sure to premove
@@ -403,9 +406,9 @@
 	    );
 
 	    var speed = Math.sqrt(entity.dx*entity.dx + entity.dy*entity.dy);
-	    if(speed > 1) {
-	    	entity.dx *= 0.9;
-	    	entity.dy *= 0.9;
+	    if(speed > 0.3) {
+	    	entity.dx *= 0.85;
+	    	entity.dy *= 0.85;
 	    }
 		
 	    entity.moveX(entity.dx * dt);
