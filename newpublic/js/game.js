@@ -11,6 +11,7 @@
 	var entitiesByID = {};
 	var ownProjectilesById = {};
 	var ownShipEntity;
+	var ammoAmt = 5;
 
 	var currentUser = {
 		id: undefined,
@@ -100,7 +101,10 @@
 
 		// space
 		if (Keys.isPressed(Keys.SPACEBAR)) {
-			// fire projectile
+			var bullet = new Projectile(Projectile.createNewDataFromUser(currentUser, 
+				ownShipEntity.m, ownShipEntity.dx, ownShipEntity.dy));
+			entitiesByID[bullet.m.id] = bullet;
+			ownProjectilesById[bullet.m.id] = bullet;
 		}
 
 	}
