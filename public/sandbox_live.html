@@ -187,6 +187,15 @@
 
 
 
+	var Board = {};
+	Board.width = window.innerWidth;
+	Board.height = window.innerHeight;
+	Board.centerX = Board.width / 2;
+	Board.centerY = Board.height / 2;
+
+
+
+
 
 	function Ship(data) {
 		
@@ -197,14 +206,13 @@
 		this.m.x = data.x;
 		this.m.y = data.y;
 		this.m.type = data.type;
+		this.m.dx = 0;
+		this.m.dy = 0;
 
 		this.gameWidth = window.innerWidth;
 		this.gameHeight = window.innerHeight;
 		this.centerX = this.gameWidth / 2;
 		this.centerY = this.gameHeight / 2;
-
-		this.dx = 0;
-		this.dy = 0;
 		
 		this.el = {};
 		this.el.point = document.createElement('div');
@@ -380,31 +388,36 @@
 		}
 	}
 
-	function applyPhysics(delta) {
+	function applyPhysics(dt) {
 		var ship = ownShipEntity;
-		var x_d = this.centerX - ship.m.x;
-		var y_d = this.centerY - ship.m.y;
+		var x_d = Board.centerX - ship.m.x;
+		var y_d = Board.centerY - ship.m.y;
 		var x_sqr = x_d*x_d;
 		var y_sqr = y_d*y_d;
 
 		var dist = Math.sqrt(x_sqr + y_sqr);
 
-		var pull = 100 / dist;
+		var pull = 1 / dist;
 		//(x_d*x_d + y_d*y_d);
 
 		//if it has already rotated, make sure to premove
 		//this.preMove(delta);
 
-		ship.dx += (
+		ship.m.dx += (
 			//x_sqr*pull
-			x_d * pull
+			x_d*pull
 		);
-	    ship.dy += (
+	    ship.m.dy += (
 	    	//y_sqr*pull
-	    	-y_d * pull
+	    	y_d*pull
 	    );
-	    ship.moveX(this.dx * delta);
-	    ship.moveY(this.dy * delta);
+	    ship.moveX(ship.m.dx * dt);
+	    ship.moveY(ship.m.dy * dt);
+
+	    if(ship.m.x === Board.centerX &&
+	    	ship.m.y === Board.centerY) {
+	    	//remove ship
+	    }
 	}
 
 
