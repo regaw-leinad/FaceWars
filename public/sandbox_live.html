@@ -119,6 +119,23 @@
 		color: '#' + Math.floor(Math.random() * 16777215).toString(16)
 	});
 
+	socket.on(Packet.USER_JOIN_SESSION, function (data) {
+		// add user to current session
+		currentSession.users[data.user.id] = data.user;
+	});
+
+	socket.on(Packet.USER_LEAVE_SESSION, function (data) {
+		// remove entities from DOM and reference
+		Object.keys(entitiesByID).forEach(function (entityID) {
+			if (entitiesByID[entityID].userName === data.user.name) {
+				entitiesByID[entityID].removeFromDOM();
+				delete entitiesByID[entityID];
+			}
+		});
+		// remove user from reference
+		delete currentSession.users[data.user.id];
+	});
+
 	socket.on(Packet.UPDATE_ENTITY, function (data) {
 		if (entitiesByID[data.entity.id]) {
 			if (data.entity.type === EntityType.SHIP) {
@@ -138,6 +155,8 @@
 		
 		var dt = time - onFrame.oldTime;
 		onFrame.oldTime = time;
+
+		console.log(dt);
 
 		handleMovement(16);
 
@@ -206,6 +225,10 @@
 	Ship.prototype.update = function (model) {
 		this.m = model;
 		this.draw();
+	};
+
+	Ship.prototype.removeFromDOM = function () {
+		this.el.point.parentNode.removeChild(this.el.point);
 	};
 
 	Ship.prototype.getModel = function () {
