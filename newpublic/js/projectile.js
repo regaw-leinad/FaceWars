@@ -25,7 +25,6 @@ function Projectile(data) {
 	this.draw();
 
 	var self = this;
-
 	setTimeout(function() {
 		if(entitiesByID[self.m.id]) {
 			self.removeFromDOM();
@@ -36,7 +35,6 @@ function Projectile(data) {
 				{ entity: self.m }
 			);
 		}
-
 	}, 4000);
 
 }

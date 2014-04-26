@@ -104,10 +104,16 @@
 
 		// space
 		if (Keys.isPressed(Keys.SPACEBAR)) {
-			var bullet = new Projectile(Projectile.createNewDataFromUser(currentUser, 
-				ownShipEntity.m, ownShipEntity.dx, ownShipEntity.dy));
-			 entitiesByID[bullet.m.id] = bullet;
-			 ownProjectilesById[bullet.m.id] = bullet;
+			var bullet = new Projectile(
+				Projectile.createNewDataFromUser(
+					currentUser, 
+					ownShipEntity.m, 
+					ownShipEntity.dx, 
+					ownShipEntity.dy
+				)
+			);
+			entitiesByID[bullet.m.id] = bullet;
+			ownProjectilesById[bullet.m.id] = bullet;
 		}
 
 	}
