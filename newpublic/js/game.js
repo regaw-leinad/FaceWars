@@ -114,6 +114,11 @@
 			);
 			entitiesByID[bullet.m.id] = bullet;
 			ownProjectilesById[bullet.m.id] = bullet;
+
+			/*console.log(bullet);		
+			console.log(bullet.m.id);
+			console.log(entitiesByID);
+			console.log(ownProjectilesById);*/
 		}
 
 	}
