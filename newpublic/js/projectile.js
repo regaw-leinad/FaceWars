@@ -25,7 +25,6 @@ function Projectile(data) {
 	this.draw();
 
 	var self = this;
-
 	setTimeout(function() {
 		if(entitiesByID[self.m.id]) {
 			self.removeFromDOM();
@@ -36,8 +35,9 @@ function Projectile(data) {
 				{ entity: self.m }
 			);
 		}
-
 	}, 4000);
+
+	return this;
 
 }
 
@@ -50,8 +50,8 @@ Projectile.createNewDataFromUser = function (user, shipModel, dx, dy) {
 	data.y = shipModel.y;
 	data.type = EntityType.PROJECTILE;
 	var rad = shipModel.shipRotation * Math.PI / 180;
-	data.dx = 2 * Math.cos(rad) + dx; 
-	data.dy = 2 * Math.sin(rad) + dy;
+	data.dx = 50 * Math.cos(rad) + dx; 
+	data.dy = 50 * Math.sin(rad) + dy;
 	return data;
 };
 

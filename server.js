@@ -59,7 +59,7 @@ socket.on('connection', function(client) {
             var registeredUserId = users.getUserIdBySocketId(client.id);
             if (registeredUserId && registeredUserId === user.id) {
                 var session = sessions.getSessionByUser(user);
-                socket.sockets.in(session.id).emit(Packet.UPDATE_ENTITY, { entity: data.entity });
+                socket.sockets.in(session.id).emit(Packet.UPDATE_ENTITY, data);
             } else {
                 // HACKER ALERT!
             }

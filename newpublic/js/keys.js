@@ -15,6 +15,14 @@ var Keys = (function () {
 	// handle key up
 	window.addEventListener('keyup', function (e) {
 		var key = e.keyCode || e.which;
+		switch (key) {
+			case 32:
+			case 37:
+			case 38:
+			case 39:
+			case 40:
+				e.preventDefault();
+		}
 		if (keyIsDown[key]) {
 			delete keyIsDown[key];
 		}

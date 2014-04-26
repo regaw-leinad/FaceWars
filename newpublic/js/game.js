@@ -62,7 +62,7 @@
 		// update projectiles
 		Object.keys(ownProjectilesById).forEach(function (id) {
 			var projectile = ownProjectilesById[id];
-			applyGravity(projectile, dt);
+			//applyGravity(projectile, dt);
 			socket.emit(
 				Packet.UPDATE_ENTITY, 
 				{ entity: projectile.getModel() }
@@ -104,10 +104,21 @@
 
 		// space
 		if (Keys.isPressed(Keys.SPACEBAR)) {
-			var bullet = new Projectile(Projectile.createNewDataFromUser(currentUser, 
-				ownShipEntity.m, ownShipEntity.dx, ownShipEntity.dy));
+			var bullet = new Projectile(
+				Projectile.createNewDataFromUser(
+					currentUser, 
+					ownShipEntity.m, 
+					ownShipEntity.dx, 
+					ownShipEntity.dy
+				)
+			);
 			entitiesByID[bullet.m.id] = bullet;
 			ownProjectilesById[bullet.m.id] = bullet;
+
+			/*console.log(bullet);		
+			console.log(bullet.m.id);
+			console.log(entitiesByID);
+			console.log(ownProjectilesById);*/
 		}
 
 	}

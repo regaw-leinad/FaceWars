@@ -37,6 +37,7 @@ function applyGravity(entity, dt) {
 }
 
 function checkCollisions() {
+    
     Object.keys(ownProjectilesById).forEach(function (projId) {
         var p = ownProjectilesById[projId];
 
@@ -50,6 +51,7 @@ function checkCollisions() {
                     console.log('emitting ENTITY_DIE for projectile');
                     socket.emit(Packet.ENTITY_DIE, { entity: entity.m });
                     kills++;
+                    setKillBox(kills);
                 }
             }
         });

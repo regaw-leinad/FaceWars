@@ -13,6 +13,9 @@ var Packet = {
 var socket = io.connect('http://iuga.ischool.uw.edu:1234');
 
 socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
+
+	console.log('on USER_AUTH_RESPONSE');
+
 	if (data.err) {
 		console.error(data.err);
 		return;
@@ -34,6 +37,8 @@ socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 	onFrame.oldTime = (new Date()).getTime();
 	onFrame((new Date()).getTime());
 
+	setUserBox(currentSession.users);
+
 });
 
 // socket.emit(Packet.USER_AUTH_NEW, {
@@ -42,11 +47,18 @@ socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 // });
 
 socket.on(Packet.USER_JOIN_SESSION, function (data) {
+
+	console.log('on USER_JOIN_SESSION');
+
 	// add user to current session
 	currentSession.users[data.user.id] = data.user;
+	setUserBox(currentSession.users);
 });
 
 socket.on(Packet.USER_LEAVE_SESSION, function (data) {
+
+	console.log('on USER_LEAVE_SESSION');
+
 	// remove entities from DOM and reference
 	Object.keys(entitiesByID).forEach(function (entityID) {
 		if (entitiesByID[entityID].m.userName === data.user.name) {
@@ -56,14 +68,21 @@ socket.on(Packet.USER_LEAVE_SESSION, function (data) {
 	});
 	// remove user from reference
 	delete currentSession.users[data.user.id];
+	setUserBox(currentSession.users);
 });
 
 socket.on(Packet.CHAT_MESSAGE, function(data) {
+
+	console.log('on CHAT_MESSAGE');
+
 	// Display the chat message here
 	// data { user: userObj, msg: '', time: timeStamp }
 });
 
 socket.on(Packet.UPDATE_ENTITY, function (data) {
+
+	//console.log('on UPDATE_ENTITY');
+
 	if (entitiesByID[data.entity.id]) {
 		if (data.entity.type === EntityType.SHIP) {
 			entitiesByID[data.entity.id].update(data.entity);
@@ -73,9 +92,6 @@ socket.on(Packet.UPDATE_ENTITY, function (data) {
 			}
 		} else if (data.entity.type === EntityType.PROJECTILE) {
 			entitiesByID[data.entity.id].update(data.entity);
-			if(data.entity.userName === currentUser.name) {
-				onFrame((new Date()).getTime());
-			}
 		}
 	} else if (data.entity.type === EntityType.SHIP) {
 		entitiesByID[data.entity.id] = new Ship(data.entity);
@@ -83,9 +99,15 @@ socket.on(Packet.UPDATE_ENTITY, function (data) {
 });
 
 socket.on(Packet.ENTITY_DIE, function (data) {
-	entitiesByID[data.entity.id].removeFromDOM();
-	delete entitiesByID[data.entity.id];
 
+	console.log('on ENTITY_DIE');
+
+	if (entitiesByID[data.entity.id]) {
+		entitiesByID[data.entity.id].removeFromDOM();
+		delete entitiesByID[data.entity.id];
+		if (ownShipEntity.m.id === data.entity.id) {
+			ownShipEntity = null;
+		}
+	}
 	// TODO explosion
-	
 });
