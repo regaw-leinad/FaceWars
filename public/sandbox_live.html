@@ -128,7 +128,7 @@
 	socket.on(Packet.USER_LEAVE_SESSION, function (data) {
 		// remove entities from DOM and reference
 		Object.keys(entitiesByID).forEach(function (entityID) {
-			if (entitiesByID[entityID].userName === data.user.name) {
+			if (entitiesByID[entityID].m.userName === data.user.name) {
 				entitiesByID[entityID].removeFromDOM();
 				delete entitiesByID[entityID];
 			}
