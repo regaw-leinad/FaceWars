@@ -1,0 +1,9 @@
+{
+    "name": "FaceWars",
+    "version": "1.0.0",
+    "description": "Space gravity game",
+    "dependencies": {
+        "socket.io": "latest"
+    },
+    "author": "FaceWars Team"
+}
