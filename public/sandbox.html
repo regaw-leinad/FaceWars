@@ -102,20 +102,41 @@
 		// state maps { keyCode: boolean }
 		var keyIsDown = {};
 		var keyIsPressed = {};
+		var keyPressLimbo = {};
 		// handle key down
 		window.addEventListener('keydown', function (e) {
 			var key = e.keyCode || e.which;
 			keyIsDown[key] = true;
-			keyIsPressed[key] = true;
+			if (!keyPressLimbo[key]) {
+				keyIsPressed[key] = true;
+				keyPressLimbo[key] = true;
+			}
 		});
 		// handle key up
 		window.addEventListener('keyup', function (e) {
 			var key = e.keyCode || e.which;
-			if (!keyIsDown[key]) return;
-			delete keyIsDown[key];
+			if (keyIsDown[key]) {
+				delete keyIsDown[key];
+			}
+			if (keyPressLimbo[key]) {
+				delete keyPressLimbo[key];
+			}
 		});
 		// public interface
 		return {
+			// update on frame
+			update: function () {
+				
+				Object.keys(keyIsDown).forEach(function (keyCode) {
+					console.log('downed keyCode = ' + keyCode);
+				});
+				Object.keys(keyIsPressed).forEach(function (keyCode) {
+					console.log('pressed keyCode = ' + keyCode);
+				});
+
+				// reset presses
+				keyIsPressed = {};
+			},
 			// state check methods
 			isDown: function (keyCode) {
 				return keyIsDown[keyCode];
@@ -137,21 +158,13 @@
 		};
 	})();
 
-
-
+	// handle frame 
 	function onFrame(time) {
-		console.log('FRAME! ' + time);
-		Object.keys(Keys.isDown).forEach(function (keyCode) {
-			console.log('keyCode = ' + keyCode);
-		});
+		//console.log('FRAME! ' + time);
+		Keys.update();
 		requestAnimationFrame(onFrame);
 	}
-
-	//requestAnimationFrame(onFrame);
-
-
-
-
+	requestAnimationFrame(onFrame);
 
 
 
