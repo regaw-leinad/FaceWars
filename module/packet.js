@@ -1,6 +1,8 @@
 var packet = {
-    SPAWN_ENTITY: '0',
-    GAME_START: '1'
+    USER_AUTH_NEW: 0,
+    USER_AUTH_RESPONSE: 1,
+    SPAWN_ENTITY: 2,
+    GAME_START: 3
 }
 
 module.exports = packet;

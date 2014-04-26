@@ -1,44 +1,38 @@
 
 function SessionStore() {
     this.sessions = {};
-    this.sessionNames = [];
 }
 
 SessionStore.prototype.addSession = function(session) {
-    this.sessions[room.id] = room;
-    this.sessionNames.push(room.displayName);
+    this.sessions[session.id] = session;
+    console.log('added game session with id: ' + session.id);
 };
 
 SessionStore.prototype.removeSession = function(session) {
-    delete this.sessions[room.id];
-
-    var index = this.sessionNames.indexOf(session.displayName);
-    if (index > -1) {
-        this.sessionNames.splice(index, 1);
-    }
+    delete this.sessions[session.id];
+    console.log('removed game session with id: ' + session.id);
 };
 
-SessionStore.prototype.getSessionByName = function(sessionName) {
-    sessionName = sessionName.toLowerCase();
-
+SessionStore.prototype.getSessionByUser = function(user) {
     for (var key in this.sessions) {
         var session = this.sessions[key];
-        if (session.name === sessionName.toLowerCase()) {
-            return room;
+        if (session.getUsers().hasOwnProperty(user.id)) {
+            return session;
         }
     }
 
     return false;
 };
 
-SessionStore.prototype.getSessionByUser = function(user) {
+SessionStore.prototype.getNextOpenSession = function() {
     for (var key in this.sessions) {
-        var room = this.sessions[key];
-        if (room.getUsers().hasOwnProperty(user.id)) {
-            return room;
+        var session = this.sessions[key];
+        if (session.canUserJoin) {
+            return session;
         }
     }
 
+    // Should never happen?!
     return false;
 };
 

@@ -24,7 +24,7 @@ VECTOR PACKET
 
 game objects:
 - user (userID, name, color)
-- vector (x, y, dx, dy)
+- entity (x, y, dx, dy)
 - size (width, height)
 - playing field (radius)
 - sun (vector, size)
@@ -39,8 +39,6 @@ these things need to be agreed on
 - player starting positions
 
 
-
-
 newnew
 - asteroids style, move and point separately
 - square root is too heavy, avoid dx, dy
@@ -49,10 +47,12 @@ newnew
 	- store x, y, speed
 
 NEW ENTITY PACKET
-- id
+- elementID (of div)
 - type
 - x
 - y
+- dx
+- dy
 - shipRotation
-- moveRotation
 - userID
+- visibility (T/F)
