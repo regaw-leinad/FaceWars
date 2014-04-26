@@ -165,7 +165,7 @@
 		}
 
 		handleInput(dt);
-		applyGravity(dt);
+		applyGravity(ownShipEntity, dt);
 
 		if (ownShipEntity) {
 			socket.emit(
