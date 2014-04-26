@@ -12,6 +12,7 @@
 	var ownProjectilesById = {};
 	var ownShipEntity;
 	var ammoAmt = 5;
+	var kills = 0;
 
 	var currentUser = {
 		id: undefined,

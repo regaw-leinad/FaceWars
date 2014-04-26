@@ -45,8 +45,11 @@ function checkCollisions() {
             if (entity.m.id !== p.m.id && entity.m.userName !== p.m.userName) {
                 // check collision here
                 if (isInsideCircle(p.m.x, p.m.y, entity.m.x, entity.m.y, 12.5)) {
+                    delete ownProjectilesById[projId];
+                    delete entitiesByID[projId];
                     console.log('emitting ENTITY_DIE for projectile');
                     socket.emit(Packet.ENTITY_DIE, { entity: entity.m });
+                    kills++;
                 }
             }
         });
