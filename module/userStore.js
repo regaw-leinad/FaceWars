@@ -14,6 +14,10 @@ UserStore.prototype.removeUser = function(user) {
     delete this.userSockets[user.socketId];
 };
 
+UserStore.prototype.getUserByUserName = function(userName) {
+    return this.users[userName.toLowerCase()];
+};
+
 UserStore.prototype.getUserIdBySocketId = function(socketId) {
     return this.userSockets[socketId];
 };

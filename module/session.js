@@ -1,15 +1,12 @@
+var salt = require('./salt');
 
 function Session(maxUsers) {
     this.maxUsers = maxUsers || 1337;
-    this.id = (new Date()).getTime();
+    this.id = (new Date()).getTime() + '-' + salt();
     this.users = {};
     this.userCount = 0;
-    console.log('creating new session with id: ' + this.id);
+    console.log('creating new session with id: ' + this.id + ', max users: ' + this.maxUsers);
 }
-
-Session.prototype.getId = function() {
-    return this.id;
-};
 
 Session.prototype.addUser = function(user, socket) {
     this.users[user.id] = user;
@@ -40,5 +37,7 @@ Session.prototype.getUserCount = function() {
 Session.prototype.canUserJoin = function() {
     return this.userCount < this.maxUsers;
 };
+
+
 
 module.exports = Session;

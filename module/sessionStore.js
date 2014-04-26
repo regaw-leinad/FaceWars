@@ -27,7 +27,7 @@ SessionStore.prototype.getSessionByUser = function(user) {
 SessionStore.prototype.getNextOpenSession = function() {
     for (var key in this.sessions) {
         var session = this.sessions[key];
-        if (session.canUserJoin) {
+        if (session.canUserJoin()) {
             return session;
         }
     }
