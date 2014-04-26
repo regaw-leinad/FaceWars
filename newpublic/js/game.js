@@ -29,6 +29,12 @@
 	Board.height = window.innerHeight;
 	Board.centerX = Board.width / 2;
 	Board.centerY = Board.height / 2;
+	$(window).on('resize', function (e) {
+		Board.width = window.innerWidth;
+		Board.height = window.innerHeight;
+		Board.centerX = Board.width / 2;
+		Board.centerY = Board.height / 2;
+	});
 
 	// handle frame
 	function onFrame(time) {
@@ -70,7 +76,7 @@
 		dt = dt || 1;
 		var ship = ownShipEntity;
 		var speed = 0.3 * dt * 0.05;
-		var rotation = 6;
+		var rotation = 0.6;
 
 		// left
 		if (Keys.isDown(Keys.LEFT)) {

@@ -19,7 +19,7 @@ function Ship(data) {
 	this.el.point.setAttribute('class', 'point');
 	this.el.ship = document.createElement('div');
 	this.el.ship.setAttribute('class', 'ship');
-	this.el.ship.style.backgroundColor = this.m.color;
+	this.el.ship.style.borderColor = 'transparent transparent transparent ' + this.m.color;
 	
 	this.el.point.appendChild(this.el.ship);
 	Board.$el.append(this.el.point);
@@ -44,6 +44,11 @@ Ship.createNewDataFromUser = function (user) {
 Ship.prototype.draw = function () {
 	this.el.point.style.left = this.m.x + 'px';
 	this.el.point.style.top = this.m.y + 'px';
+	this.el.ship.style.webkitTransform = 'rotate('+this.m.shipRotation+'deg)';
+    this.el.ship.style.mozTransform    = 'rotate('+this.m.shipRotation+'deg)';
+    this.el.ship.style.msTransform     = 'rotate('+this.m.shipRotation+'deg)';
+    this.el.ship.style.oTransform      = 'rotate('+this.m.shipRotation+'deg)';
+    this.el.ship.style.transform       = 'rotate('+this.m.shipRotation+'deg)';
 };
 
 Ship.prototype.update = function (model) {
@@ -75,11 +80,11 @@ Ship.prototype.thrust = function(amount) {
 };
 
 Ship.prototype.rotateCCW = function(deg) {
-	this.m.shipRotation += deg;
+	this.m.shipRotation -= deg;
 };
 
 Ship.prototype.rotateCW = function(deg) {
-	this.m.shipRotation -= deg;
+	this.m.shipRotation += deg;
 };
 
 Ship.prototype.setColor = function(color) {
