@@ -12,20 +12,27 @@
 	<div id="layer0">
 
 		<h1>SPACEWAR 2014</h1>
-		<p>pick a username</p>
-		<input id="username" class="form-control init-input" type="text" name="username">
-		<p>pick a color</p>
-		<input id="color" class="form-control init-input" type="color" value="#FF0000">
-		<button class="btn btn-default" id="submit" type="button">SHOOT SHIT!</button>
+		<p>choose a color and a username</p>
+		<div id="inputs">
+			<input id="username" class="form-control init-input" type="text" name="username"></input>
+			<!-- preview element -->
+			<div class="preview" style="background-color: rgb(255, 0, 0);"></div>
+
+			<!-- colorpicker element -->
+			<div class="colorpicker" style="display: none;">
+				<canvas id="picker" var="1" width="300" height="300"></canvas>
+			</div>
+		</div> 
+		<h2>burner nguyen prow wager</h2>
 	</div>
 
 	<div id="gameboard">
-		<svg height="100%" width="100%">
+		<svg id="star-container" height="100%" width="100%">
 			<defs>
 				<radialGradient id="grad2" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
 					<stop offset="0%" style="stop-color:rgb(255,255,255);
 					stop-opacity:1" />
-					<stop offset="100%" style="stop-color:rgb(255,255,0);stop-opacity:1" />
+					<stop offset="100%" style="stop-color:rgb(255,255,0);stop-opacity:1"/>
 				</radialGradient>
 			</defs>
 			<circle id="star" r="30" fill="url(#grad2)"/>
@@ -41,7 +48,7 @@
 					<stop offset="50%" style="stop-color:rgb(0,0,0);stop-opacity:1" />
 				</radialGradient>
 			</defs>
-			<circle id="circle" cx="500" cy="500" r="100" stroke="black" stroke-width="1000" fill="none" />
+			<circle id="circle" cx="500" cy="500" rx="100" stroke="black" stroke-width="1000" fill="url(#grad1)" />
 		</svg>
 	</div>
 
@@ -68,13 +75,15 @@
 	<script src="js/game.js"></script>
 	<script src="js/salt.js"></script>
 	<script src="js/physics.js"></script>
+	<script src="js/picker.js"></script>
+
 
 	<script>
-		var scene = document.getElementById('scene');
-		var parallax = new Parallax(scene);
+	var scene = document.getElementById('scene');
+	var parallax = new Parallax(scene);
 
-		window.onload = resize;
-		window.onresize = resize;
+	window.onload = load;
+	window.onresize = resize;
 	</script>
 </body>
 </html>

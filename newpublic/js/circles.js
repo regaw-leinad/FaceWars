@@ -1,6 +1,14 @@
 // circle resize logic
 var main = $('#layer0');
 
+function load() {
+	randomColors()
+	resize()
+
+	main.css('margin-top', window.innerHeight / 6 + 'px');
+	main.fadeIn()
+}
+
 function resize() {
 	var porthole = document.getElementById('porthole');
 	var circle = document.getElementById('circle');
@@ -21,15 +29,13 @@ function resize() {
 	centerCircle(circle, xcenter, ycenter)
 	centerCircle(star, xcenter, ycenter)
 
-	circle.setAttribute('r', smaller / 2 + 500);
-	star.setAttribute('r', smaller / 25);
+	//circle.setAttribute('r', smaller / 2 + 500);
+	//star.setAttribute('r', smaller / 25);
 
 
 	//circle.setAttribute('cx', xcenter);
 	//circle.setAttribute('cy', ycenter);
 	//circle.setAttribute('r', smaller / 2 + 500);
-
-	main.css('margin-top', window.innerHeight / 4 + 'px');
 }
 
 function centerCircle(circle, xcenter, ycenter) {
@@ -37,18 +43,36 @@ function centerCircle(circle, xcenter, ycenter) {
 	circle.setAttribute('cy', ycenter);
 }
 
-$('#submit').click(function(){
-	socket.emit(Packet.USER_AUTH_NEW, {
-		userName: $('#username').val(),
-		color: $('#color').val()
-	}); 
-})
+// $('#submit').click(function(){
+// 	socket.emit(Packet.USER_AUTH_NEW, {
+// 		userName: $('#username').val(),
+// 		color: $('#color').val()
+// 	}); 
+// })
+
+$('input[type=text]').on('keyup', function(e) {
+    if (e.which == 13) {
+        e.preventDefault();
+		socket.emit(Packet.USER_AUTH_NEW, {
+			userName: $('#username').val(),
+			color: $('#color').val()
+		}); 
+    }
+});
 
 function fadeGameIn() {
 	$('#layer0').fadeOut()
 	$('#layer1').fadeIn()
 	$('#gameboard').fadeIn()
 }
+
+function randomColors() {
+	var r = Math.round(Math.random() * 255);
+	var g = Math.round(Math.random() * 255);
+	var b = Math.round(Math.random() * 255);
+	$('.preview').attr('style', 'background-color: rgb('+ r + ','+ g + ','+ b + ');');
+}
+
 
 // // shape movement logic
 // var framerate = 30;

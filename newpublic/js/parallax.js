@@ -400,6 +400,10 @@
 
   Parallax.prototype.onAnimationFrame = function() {
     this.updateBounds();
+    if (ownShipEntity) {
+      this.ix = ownShipEntity.m.x / 1000;
+      this.iy = ownShipEntity.m.y / 1000;
+    }
     var dx = this.ix - this.cx;
     var dy = this.iy - this.cy;
     if ((Math.abs(dx) > this.calibrationThreshold) || (Math.abs(dy) > this.calibrationThreshold)) {

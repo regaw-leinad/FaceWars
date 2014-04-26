@@ -13,7 +13,6 @@ html, body {
 	color: #FFF;
 	font-size: 50px;
 	min-width: 1000px;
-]   width: auto !important;  /* Firefox will set width as auto */
    width:1000px;     
 }
 
@@ -24,19 +23,24 @@ body {
 h1 {
 	color: #FFF;
 	text-align: center;
-	font-size: 200%;
+	font-size: 175%;
 	font-family: battlestar;
+	margin: 0;
+	padding: 10px;
+	padding-bottom: 0px;
+}
+
+h2 {
+	font-size: 20%;
+	padding: 0;
 	margin: 0;
 }
 
 p {
 	font-size: 50%;
+	margin: 0;
 }
 
-#filler {
-	top: 50%;
-	position: absolute;
-}
 
 #layer0 {
 	background-color: rgba(0, 0, 0, .7);
@@ -45,6 +49,7 @@ p {
 	text-align: center;
 	margin: 0 auto;
 	border-radius: 30px;
+	display: none;
 }
 
 .init-input {
@@ -55,11 +60,11 @@ p {
 #layer1, #layer2, #gameboard{
 	position: absolute;
 	left: 0px;
-	top:; 0px;
+	top: 0px;
 }
 
 #layer1 {
-	z-index: 1;
+	z-index: 2;
 	left: 0px;
 	top: 0px;
 	display: none;
@@ -74,14 +79,12 @@ p {
 }
 
 #gameboard {
-	z-index: 0;
+	z-index: 1;
 	min-height: 100%;
 	min-width: 100%;
 	display: none;
 }
 
-#star {
-}
 
 #scene {
 	min-height: 100%;
@@ -95,6 +98,8 @@ p {
 li img {
 	min-height: 100%;
 	min-width: 100%;
+	background-repeat: repeat-x;
+	background-repeat: repeat-y;
 }
 
 .point {
@@ -108,13 +113,81 @@ li img {
 	width: 50px;
 	height: 50px;
 	position: absolute;
-	z-index: 5;
+	z-index: 0;
 	top: 50%;
 	left: 50%;
 	margin-top: -25px;
 	margin-left: -25px;
 	border-radius: 100px;
 	opacity: 0.6;
+}
+
+#star, #star-container {
+	z-index: 10;
+}
+
+#inputs {
+	margin: 0;
+	padding: 0;
+
+}
+
+/* colorpicker styles */
+.colorpicker {
+    border-radius: 5px 5px 5px 5px;
+    font-size: 12px;
+    min-width: 100%;
+    display: inline-block;
+}
+
+#picker {
+    cursor: crosshair;
+    margin: 0 auto;
+    border: 0;
+    text-align: center;
+}
+.controls {
+    float: right;
+    margin: 10px;
+}
+.controls > div {
+    border: 1px solid #2F2F2F;
+    margin-bottom: 5px;
+    overflow: hidden;
+    padding: 5px;
+}
+.controls label {
+    float: left;
+}
+.controls > div input {
+    background-color: #121212;
+    border: 1px solid #2F2F2F;
+    color: #DDDDDD;
+    float: right;
+    font-size: 10px;
+    height: 14px;
+    margin-left: 6px;
+    text-align: center;
+    text-transform: uppercase;
+    width: 75px;
+}
+.preview {
+    background: url("../img/select.png") repeat scroll center center transparent;
+    border-radius: 3px;
+    box-shadow: 2px 2px 2px #444444;
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+}
+
+#username {
+	display: inline-block;
+	margin-bottom: 20px;
+}
+
+.btn {
+	border: none;
 }
 
 /*#follower {
