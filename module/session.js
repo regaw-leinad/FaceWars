@@ -15,14 +15,14 @@ Session.prototype.addUser = function(user, socket) {
     this.users[user.id] = user;
     this.userCount++;
     socket.join(this.id);
-    console.log('Adding user ' + user.getDisplayName + ' to session ' + this.id);
+    console.log('Adding user ' + user.displayName + ' to session ' + this.id);
 };
 
 Session.prototype.removeUser = function(user, socket) {
     delete this.users[user.id];
     this.userCount--;
     socket.leave(this.id);
-    console.log('Removing user ' + user.getDisplayName + ' from session ' + this.id);
+    console.log('Removing user ' + user.displayName + ' from session ' + this.id);
 };
 
 Session.prototype.hasUser = function(user) {
