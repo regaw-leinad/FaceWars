@@ -44,7 +44,7 @@
 		onFrame.oldTime = time;
 
 		// handle user keyboard input
-		handleInput(dt);
+		handleInput(8);
 
 		// update ship
 		if (ownShipEntity) {
@@ -77,7 +77,7 @@
 		dt = dt || 1;
 		var ship = ownShipEntity;
 		var speed = 0.3 * dt * 0.05;
-		var rotation = 0.6;
+		var rotation = 5;
 
 		// left
 		if (Keys.isDown(Keys.LEFT)) {
