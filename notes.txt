@@ -1,0 +1,35 @@
+dan's localhost: 172.26.204.137:1234
+
+networking:
+1) client calculates own ship & projectiles
+2) client sends results up to server
+3) server sends update to ALL players, including original client
+4) all players draw based off server message
+
+so?
+- client event loop (requestAnimationFrame) is for calulating updated vectors
+- server receives all updates and sends them out to everybody w/in game
+- client draws updates whenever it receives them from server
+
+
+VECTOR PACKET
+- shipID
+- type (1 === ship && 2 === missile)
+- x
+- y
+- dx
+- dy
+
+
+game objects:
+
+- playing field (radius)
+- sun (x, y)
+- user (id, name, color)
+- ship (id, x, y, dx, dy)
+- missile (shipID, x, y, dx, dy)
+
+
+ON GAME START
+- player name and colors
+- player starting positions
