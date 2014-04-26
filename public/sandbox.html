@@ -126,14 +126,14 @@
 		return {
 			// update on frame
 			update: function () {
-				
+				/*
 				Object.keys(keyIsDown).forEach(function (keyCode) {
 					console.log('downed keyCode = ' + keyCode);
 				});
 				Object.keys(keyIsPressed).forEach(function (keyCode) {
 					console.log('pressed keyCode = ' + keyCode);
 				});
-
+				*/
 				// reset presses
 				keyIsPressed = {};
 			},
@@ -150,7 +150,7 @@
 				}
 			},
 			// keycodes
-			SPACE: 32,
+			SPACEBAR: 32,
 			LEFT: 37,
 			UP: 38,
 			RIGHT: 39,
@@ -158,47 +158,78 @@
 		};
 	})();
 
+
+
+
+	function handleMovement(dtime) {
+		var speed = 10;
+		var slowdown = 3 / 4;
+		// up left
+		if (Keys.isDown(Keys.UP) && Keys.isDown(Keys.LEFT)) {
+			speed = speed * slowdown;
+			ship.moveX(-speed);
+			ship.moveY(-speed);
+		}
+		// up right
+		else if (Keys.isDown(Keys.UP) && Keys.isDown(Keys.RIGHT)) {
+			speed = speed * slowdown;
+			ship.moveX(speed);
+			ship.moveY(-speed);
+		}
+		// down left
+		else if (Keys.isDown(Keys.DOWN) && Keys.isDown(Keys.LEFT)) {
+			speed = speed * slowdown;
+			ship.moveX(-speed);
+			ship.moveY(speed);
+		}
+		// down right
+		else if (Keys.isDown(Keys.DOWN) && Keys.isDown(Keys.RIGHT)) {
+			speed = speed * slowdown;
+			ship.moveX(speed);
+			ship.moveY(speed);
+		}
+		else {
+			// left
+			if (Keys.isDown(Keys.LEFT)) {
+				ship.moveX(-speed);
+			}
+			// right
+			if (Keys.isDown(Keys.RIGHT)) {
+				ship.moveX(speed);
+			}
+			// up
+			if (Keys.isDown(Keys.UP)) {
+				ship.moveY(-speed);
+			}
+			// down
+			if (Keys.isDown(Keys.DOWN)) {
+				ship.moveY(speed);
+			}
+		}
+	}
+
+
+
+
 	// handle frame 
 	function onFrame(time) {
-		//console.log('FRAME! ' + time);
+		
+		var dtime = time - onFrame.oldTime;
+
+		if (Keys.isPressed(Keys.SPACEBAR)) {
+			ship.setColor(new RGBA());
+		}
+
+		handleMovement(dtime);
+		
 		Keys.update();
 		requestAnimationFrame(onFrame);
 	}
 	// start frame handling
+	onFrame.oldTime = (new Date()).getTime();
 	requestAnimationFrame(onFrame);
 
 
-
-	window.addEventListener('keydown', function (e) {
-		var key = e.keyCode || e.which;
-		switch (key) {
-			case 32:
-				// spacebar
-				e.preventDefault();
-				ship.setColor(new RGBA());
-				break;
-			case 37:
-				// left arrow
-				e.preventDefault();
-				ship.moveX(-10);
-				break;
-			case 38:
-				// up arrow
-				e.preventDefault();
-				ship.moveY(-10);
-				break;
-			case 39:
-				// right arrow
-				e.preventDefault();
-				ship.moveX(10);
-				break;
-			case 40:
-				// down arrow
-				e.preventDefault();
-				ship.moveY(10);
-				break;
-		}
-	});
 
 </script>
 </body>
