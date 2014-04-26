@@ -73,8 +73,6 @@ socket.on(Packet.UPDATE_ENTITY, function (data) {
 			}
 		} else if (data.entity.type === EntityType.PROJECTILE) {
 			entitiesByID[data.entity.id].update(data.entity);
-
-			console.log('updated');
 			if(data.entity.userName === currentUser.name) {
 				onFrame((new Date()).getTime());
 			}
