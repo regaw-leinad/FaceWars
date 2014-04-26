@@ -125,8 +125,8 @@
 		// remove entities from DOM and reference
 		Object.keys(entitiesByID).forEach(function (entityID) {
 			if (entitiesByID[entityID].m.userName === data.user.name) {
-				entitiesByID[entityID].remove();
-				
+				entitiesByID[entityID].removeFromDOM();
+				delete entitiesByID[entityID];
 			}
 		});
 		// remove user from reference
@@ -153,16 +153,10 @@
 	});
 
 	// handle frame
-	var deathCount = 0;
 	function onFrame(time) {
 		
 		var dt = time - onFrame.oldTime;
 		onFrame.oldTime = time;
-
-		if (deathCount < 25) {
-			console.log(dt);
-			deathCount++;
-		}
 
 		handleInput(dt);
 		applyGravity(ownShipEntity, dt);
@@ -246,9 +240,8 @@
 		this.draw();
 	};
 
-	Ship.prototype.remove = function () {
+	Ship.prototype.removeFromDOM = function () {
 		this.el.point.parentNode.removeChild(this.el.point);
-		delete entitiesByID[this.m.id];
 	};
 
 	Ship.prototype.getModel = function () {
@@ -420,7 +413,7 @@
 
 	    if(entity.m.x === Board.centerX &&
 	    	entity.m.y === Board.centerY) {
-	    	entity.remove();
+	    	// TODO
 	    }
 
 
