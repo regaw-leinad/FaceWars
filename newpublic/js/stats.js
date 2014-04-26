@@ -1,8 +1,8 @@
 // statistics
 var killBoxEl = document.createElement('div');
 killBoxEl.setAttribute('id', 'killBox');
-Board.$el.appendChild(killBoxEl);
-function setKills(kills) {
+Board.$el.append(killBoxEl);
+function setKillBox(kills) {
 	var html = '<b>Kills:</b>&nbsp;';
 	killBoxEl.innerHTML = html + kills;
 }
@@ -10,13 +10,14 @@ function setKills(kills) {
 // players
 var userBoxEl = document.createElement('div');
 userBoxEl.setAttribute('id', 'userBox');
-Board.$el.appendChild(userBoxEl);
-function setKills(users) {
+Board.$el.append(userBoxEl);
+function setUserBox(users) {
 	var html = '';
-	users.forEach(function (user) {
+	Object.keys(users).forEach(function (key) {
+		var user = users[key];
 		html += '<strong style="color:' + user.color + '">';
 		html += user.name;
-		html += '</strong>';
+		html += '</strong><br>';
 	});
-	userBox.innerHTML = html;
+	userBoxEl.innerHTML = html;
 }

@@ -34,6 +34,8 @@ socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 	onFrame.oldTime = (new Date()).getTime();
 	onFrame((new Date()).getTime());
 
+	setUserBox(currentSession.users);
+
 });
 
 // socket.emit(Packet.USER_AUTH_NEW, {
@@ -44,6 +46,7 @@ socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 socket.on(Packet.USER_JOIN_SESSION, function (data) {
 	// add user to current session
 	currentSession.users[data.user.id] = data.user;
+	setUserBox(currentSession.users);
 });
 
 socket.on(Packet.USER_LEAVE_SESSION, function (data) {
@@ -56,6 +59,7 @@ socket.on(Packet.USER_LEAVE_SESSION, function (data) {
 	});
 	// remove user from reference
 	delete currentSession.users[data.user.id];
+	setUserBox(currentSession.users);
 });
 
 socket.on(Packet.CHAT_MESSAGE, function(data) {

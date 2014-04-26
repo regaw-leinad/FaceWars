@@ -50,6 +50,7 @@ function checkCollisions() {
                     console.log('emitting ENTITY_DIE for projectile');
                     socket.emit(Packet.ENTITY_DIE, { entity: entity.m });
                     kills++;
+                    setKillBox(kills);
                 }
             }
         });

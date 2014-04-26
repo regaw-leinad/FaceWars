@@ -237,14 +237,27 @@ li img {
 	width: auto;
 	height: auto;
 	position: absolute;
-	top: 10px;
-	right: 10px;
+	padding: 4px;
+	margin: 4px;
+	top: 20px;
+	right: 20px;
+	font-size: 16px;
+	background-color: black;
 }
 
 #userBox {
 	width: auto;
 	height: auto;
 	position: absolute;
-	bottom: 10px;
-	right: 10px;
+	bottom: 20px;
+	right: 20px;
+	font-size: 16px;
+	text-align: right;
+}
+
+#userBox strong {
+	background-color: black;
+	padding: 4px;
+	margin: 4px;
+	text-align: right;
 }
