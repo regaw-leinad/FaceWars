@@ -35,28 +35,32 @@
 		var dt = time - onFrame.oldTime;
 		onFrame.oldTime = time;
 
+		// handle user keyboard input
 		handleInput(dt);
 
-		applyGravity(ownShipEntity, dt);
-
-		if(ownShipEntity.speed > 0.3) {
-			ownShipEntity.speed = 0.3;
-		}
-
+		// update ship
 		if (ownShipEntity) {
+			applyGravity(ownShipEntity, dt);
+			if(ownShipEntity.speed > 0.3) {
+				ownShipEntity.speed = 0.3;
+			}
 			socket.emit(
 				Packet.UPDATE_ENTITY, 
 				{ entity: ownShipEntity.getModel() }
 			);
 		}
 
+		// update projectiles
 		Object.keys(ownProjectilesById).forEach(function (id) {
+			var projectile = ownProjectilesById[id];
+			applyGravity(projectile, dt);
 			socket.emit(
 				Packet.UPDATE_ENTITY, 
-				{ entity: ownProjectilesById[id].getModel() }
+				{ entity: projectile.getModel() }
 			);
 		});
 
+		// update keyboard handler
 		Keys.update();
 	}
 
