@@ -50,8 +50,8 @@ Projectile.createNewDataFromUser = function (user, shipModel, dx, dy) {
 	data.y = shipModel.y;
 	data.type = EntityType.PROJECTILE;
 	var rad = shipModel.shipRotation * Math.PI / 180;
-	data.dx = 2 * Math.cos(rad) + dx; 
-	data.dy = 2 * Math.sin(rad) + dy;
+	data.dx = 6 * Math.cos(rad) + dx; 
+	data.dy = 6 * Math.sin(rad) + dy;
 	return data;
 };
 
