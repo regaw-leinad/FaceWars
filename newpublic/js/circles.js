@@ -55,7 +55,7 @@ $('input[type=text]').on('keyup', function(e) {
         e.preventDefault();
 		socket.emit(Packet.USER_AUTH_NEW, {
 			userName: $('#username').val(),
-			color: $('#color').val()
+			color: $('#color').css('background-color')
 		}); 
     }
 });
