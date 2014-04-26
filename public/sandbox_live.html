@@ -125,8 +125,8 @@
 		// remove entities from DOM and reference
 		Object.keys(entitiesByID).forEach(function (entityID) {
 			if (entitiesByID[entityID].m.userName === data.user.name) {
-				entitiesByID[entityID].removeFromDOM();
-				delete entitiesByID[entityID];
+				entitiesByID[entityID].remove();
+				
 			}
 		});
 		// remove user from reference
@@ -165,7 +165,7 @@
 		}
 
 		handleInput(dt);
-		applyPhysics(dt);
+		applyGravity(dt);
 
 		if (ownShipEntity) {
 			socket.emit(
@@ -250,8 +250,9 @@
 		this.draw();
 	};
 
-	Ship.prototype.removeFromDOM = function () {
+	Ship.prototype.remove = function () {
 		this.el.point.parentNode.removeChild(this.el.point);
+		delete entitiesByID[this.m.id];
 	};
 
 	Ship.prototype.getModel = function () {
@@ -388,10 +389,9 @@
 		}
 	}
 
-	function applyPhysics(dt) {
-		var ship = ownShipEntity;
-		var x_d = Board.centerX - ship.m.x;
-		var y_d = Board.centerY - ship.m.y;
+	function applyGravity(entity, dt) {
+		var x_d = Board.centerX - entity.m.x;
+		var y_d = Board.centerY - entity.m.y;
 		var x_sqr = x_d*x_d;
 		var y_sqr = y_d*y_d;
 
@@ -403,20 +403,21 @@
 		//if it has already rotated, make sure to premove
 		//this.preMove(delta);
 
-		ship.m.dx += (
+		entity.m.dx += (
 			//x_sqr*pull
 			x_d*pull
 		);
-	    ship.m.dy += (
+	    entity.m.dy += (
 	    	//y_sqr*pull
 	    	y_d*pull
 	    );
-	    ship.moveX(ship.m.dx * dt);
-	    ship.moveY(ship.m.dy * dt);
+	    entity.moveX(entity.m.dx * dt);
+	    entity.moveY(entity.m.dy * dt);
 
-	    if(ship.m.x === Board.centerX &&
-	    	ship.m.y === Board.centerY) {
-	    	//remove ship
+	    if(entity.m.x === Board.centerX &&
+	    	entity.m.y === Board.centerY) {
+	    	// hit sun, remove entity
+	    	entity.remove();
 	    }
 	}
 
