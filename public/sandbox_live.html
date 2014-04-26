@@ -86,8 +86,8 @@
 
 
 
-	//var socket = io.connect('http://localhost:1234');
-	var socket = io.connect('http://iuga.ischool.uw.edu:1234');
+	var socket = io.connect('http://localhost:1234');
+	//var socket = io.connect('http://iuga.ischool.uw.edu:1234');
 
 	socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 		if (data.err) {
@@ -165,7 +165,6 @@
 		}
 
 		handleInput(dt);
-
 		applyPhysics(dt);
 
 		if (ownShipEntity) {
@@ -198,6 +197,11 @@
 		this.m.x = data.x;
 		this.m.y = data.y;
 		this.m.type = data.type;
+
+		this.gameWidth = window.innerWidth;
+		this.gameHeight = window.innerHeight;
+		this.centerX = this.gameWidth / 2;
+		this.centerY = this.gameHeight / 2;
 
 		this.dx = 0;
 		this.dy = 0;
@@ -265,9 +269,6 @@
 	Ship.prototype.setColor = function(color) {
 		this.m.color = color;
 	};
-
-
-
 
 
 
@@ -380,43 +381,30 @@
 	}
 
 	function applyPhysics(delta) {
-		var gameWidth = window.innerWidth;
-		var gameHeight = window.innerHeight;
-		var centerX = gameWidth / 2;
-		var centerY = gameHeight / 2;
-
-		var x_d = centerX - this.m.x;
-		var y_d = centerY - this.m.y;
+		var ship = ownShipEntity;
+		var x_d = this.centerX - ship.m.x;
+		var y_d = this.centerY - ship.m.y;
 		var x_sqr = x_d*x_d;
 		var y_sqr = y_d*y_d;
 
 		var dist = Math.sqrt(x_sqr + y_sqr);
 
-		var pull = this.GRAVITY / dist;
+		var pull = 100 / dist;
 		//(x_d*x_d + y_d*y_d);
 
 		//if it has already rotated, make sure to premove
 		//this.preMove(delta);
 
-		this.velocity.dx += (
+		ship.dx += (
 			//x_sqr*pull
 			x_d * pull
 		);
-	    this.velocity.dy += (
+	    ship.dy += (
 	    	//y_sqr*pull
-	    	y_d * pull
+	    	-y_d * pull
 	    );
-	    this.x += this.velocity.dx * delta;
-	    this.y += this.velocity.dy * delta;
-	    this.shipRotation += this.velocity.rotation * delta;
-
-
-
-
-
-
-
-
+	    ship.moveX(this.dx * delta);
+	    ship.moveY(this.dy * delta);
 	}
 
 
