@@ -28,8 +28,8 @@ function applyGravity(entity, dt) {
     	entity.dy *= 0.85;
     }
 	
-    entity.moveX(entity.dx * dt);
-    entity.moveY(entity.dy * dt);
+    entity.m.x += entity.dx * dt;
+    entity.m.y += entity.dy * dt;
  
     if(entity.m.x === Board.centerX &&
     	entity.m.y === Board.centerY) {

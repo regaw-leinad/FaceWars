@@ -39,6 +39,10 @@
 
 		applyGravity(ownShipEntity, dt);
 
+		if(ownShipEntity.speed > 0.3) {
+			ownShipEntity.speed = 0.3;
+		}
+
 		if (ownShipEntity) {
 			socket.emit(
 				Packet.UPDATE_ENTITY, 
