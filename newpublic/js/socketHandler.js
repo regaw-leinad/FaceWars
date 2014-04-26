@@ -105,7 +105,7 @@ socket.on(Packet.ENTITY_DIE, function (data) {
 	if (entitiesByID[data.entity.id]) {
 		entitiesByID[data.entity.id].removeFromDOM();
 		delete entitiesByID[data.entity.id];
-		if (ownShipEntity.id === data.entity.id) {
+		if (ownShipEntity.m.id === data.entity.id) {
 			ownShipEntity = null;
 		}
 	}
