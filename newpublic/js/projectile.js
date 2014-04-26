@@ -63,12 +63,10 @@ Projectile.prototype.getId = function () {
 	return this.m.id;
 };
 
-Projectile.prototype.moveX = function(dx) {
-	this.m.x += dx;
-};
-
-Projectile.prototype.moveY = function(dy) {
-	this.m.y += dy;
+Ship.prototype.thrust = function(amount) {
+	var rad = this.shipRotation * Math.PI / 180;
+	this.dx += amount * Math.cos(rad);
+	this.dy += amount * Math.sin(rad);
 };
 
 Projectile.prototype.setColor = function(color) {

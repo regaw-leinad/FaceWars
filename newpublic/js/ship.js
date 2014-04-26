@@ -7,6 +7,8 @@ function Ship(data) {
 	this.m.x = data.x;
 	this.m.y = data.y;
 	this.m.type = data.type;
+	this.m.shipRotation = data.shipRotation;
+	this.m.moveRotation = data.moveRotation;
 
 	this.dx = 0;
 	this.dy = 0;
@@ -36,6 +38,8 @@ Ship.createNewDataFromUser = function (user) {
 	data.x = 10;
 	data.y = 10;
 	data.type = EntityType.SHIP;
+	data.shipRotation = 70;
+	data.moveRotation = 70;
 	return data;
 };
 
@@ -65,12 +69,18 @@ Ship.prototype.getId = function () {
 	return this.m.id;
 };
 
-Ship.prototype.moveX = function(dx) {
-	this.m.x += dx;
+Ship.prototype.thrust = function(amount) {
+	var rad = this.shipRotation * Math.PI / 180;
+	this.dx += amount * Math.cos(rad);
+	this.dy += amount * Math.sin(rad);
 };
 
-Ship.prototype.moveY = function(dy) {
-	this.m.y += dy;
+Ship.prototype.rotateCCW = function(deg) {
+	this.m.shipRotation += deg;
+};
+
+Ship.prototype.rotateCW = function(deg) {
+	this.m.shipRotation -= deg;
 };
 
 Ship.prototype.setColor = function(color) {

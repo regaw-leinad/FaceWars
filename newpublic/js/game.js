@@ -61,48 +61,31 @@
 		dt = dt || 1;
 		var ship = ownShipEntity;
 		var speed = 0.3 * dt;
-		var slowdown = 3 / 4;
+		var rotation = 6;
 
-		// up left
-		if (Keys.isDown(Keys.UP) && Keys.isDown(Keys.LEFT)) {
-			speed = speed * slowdown;
-			ship.moveX(-speed);
-			ship.moveY(-speed);
+		// left
+		if (Keys.isDown(Keys.LEFT)) {
+			ship.rotateCCW(rotation);
 		}
-		// up right
-		else if (Keys.isDown(Keys.UP) && Keys.isDown(Keys.RIGHT)) {
-			speed = speed * slowdown;
-			ship.moveX(speed);
-			ship.moveY(-speed);
+
+		// right
+		if (Keys.isDown(Keys.RIGHT)) {
+			ship.rotateCW(rotation);
 		}
-		// down left
-		else if (Keys.isDown(Keys.DOWN) && Keys.isDown(Keys.LEFT)) {
-			speed = speed * slowdown;
-			ship.moveX(-speed);
-			ship.moveY(speed);
+
+		// up
+		if (Keys.isDown(Keys.UP)) {
+			ship.thrust(speed);
 		}
-		// down right
-		else if (Keys.isDown(Keys.DOWN) && Keys.isDown(Keys.RIGHT)) {
-			speed = speed * slowdown;
-			ship.moveX(speed);
-			ship.moveY(speed);
-		} 
-		else {
-			// left
-			if (Keys.isDown(Keys.LEFT)) {
-				ship.moveX(-speed);
-			}
-			// right
-			if (Keys.isDown(Keys.RIGHT)) {
-				ship.moveX(speed);
-			}
-			// up
-			if (Keys.isDown(Keys.UP)) {
-				ship.moveY(-speed);
-			}
-			// down
-			if (Keys.isDown(Keys.DOWN)) {
-				ship.moveY(speed);
-			}
+
+		// down
+		if (Keys.isDown(Keys.DOWN)) {
+			ship.thrust(-speed);
 		}
+
+		// space
+		if (Keys.isPressed(Keys.SPACEBAR)) {
+			// fire projectile
+		}
+
 	}

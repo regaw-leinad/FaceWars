@@ -5,7 +5,8 @@ var packet = {
     USER_LEAVE_SESSION: 3,
     USER_DISCONNECTING: 4,
     UPDATE_ENTITY: 5,
-    CHAT_MESSAGE: 6
+    CHAT_MESSAGE: 6,
+    ENTITY_DIE: 7
 }
 
 module.exports = packet;
