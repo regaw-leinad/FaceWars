@@ -50,8 +50,8 @@ socket.on('connection', function(client) {
     });
 
     client.on(Packet.UPDATE_ENTITY, function(data) {
-        console.log('Received UPDATE_ENTITY Packet');
-        console.log(data);
+        //console.log('Received UPDATE_ENTITY Packet');
+        //console.log(data);
 
         if (data.entity && data.entity.userName) {
             var user = users.getUserByUserName(data.entity.userName);
@@ -86,4 +86,15 @@ socket.on('connection', function(client) {
             // else ignore disconnect
         }
     });
+
+    client.on(Packet.CHAT_MESSAGE, function(data) {
+        console.log('Received CHAT_MESSAGE Packet');
+        console.log(data);
+
+        var registeredUserId = users.getUserIdBySocketId(client.id);
+        if (registeredUserId && registeredUserId === data.user.id) {
+            var session = sessions.getSessionByUser(user);
+            socket.sockets.in(session.id).emit(Packet.CHAT_MESSAGE, data);
+        }
+    })
 });

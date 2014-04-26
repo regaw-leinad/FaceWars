@@ -45,13 +45,9 @@
 	    USER_JOIN_SESSION: 2,
 	    USER_LEAVE_SESSION: 3,
 	    USER_DISCONNECTING: 4,
-	    UPDATE_ENTITY: 5
+	    UPDATE_ENTITY: 5,
+	    CHAT_MESSAGE: 6
 	};
-
-
-
-
-
 
 	var EntityType = {
 		SHIP: 0,
@@ -90,7 +86,8 @@
 
 
 
-	var socket = io.connect('http://localhost:1234');
+	//var socket = io.connect('http://localhost:1234');
+	var socket = io.connect('http://iuga.ischool.uw.edu:1234');
 
 	socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 		if (data.err) {
@@ -109,7 +106,8 @@
 		entitiesByID[ownShipEntity.getId()] = ownShipEntity;
 
 		// begin packet loop
-		onFrame();
+		onFrame.oldTime = (new Date()).getTime();
+		onFrame((new Date()).getTime());
 
 	});
 
@@ -118,13 +116,35 @@
 		color: '#' + Math.floor(Math.random() * 16777215).toString(16)
 	});
 
+	socket.on(Packet.USER_JOIN_SESSION, function (data) {
+		// add user to current session
+		currentSession.users[data.user.id] = data.user;
+	});
+
+	socket.on(Packet.USER_LEAVE_SESSION, function (data) {
+		// remove entities from DOM and reference
+		Object.keys(entitiesByID).forEach(function (entityID) {
+			if (entitiesByID[entityID].m.userName === data.user.name) {
+				entitiesByID[entityID].removeFromDOM();
+				delete entitiesByID[entityID];
+			}
+		});
+		// remove user from reference
+		delete currentSession.users[data.user.id];
+	});
+
+	socket.on(Packet.CHAT_MESSAGE, function(data) {
+		// Display the chat message here
+		// data { user: userObj, msg: '', time: timeStamp }
+	});
+
 	socket.on(Packet.UPDATE_ENTITY, function (data) {
 		if (entitiesByID[data.entity.id]) {
 			if (data.entity.type === EntityType.SHIP) {
 				entitiesByID[data.entity.id].update(data.entity);
 				if (data.entity.userName === currentUser.name) {
 					// packet loop lols
-					onFrame();
+					onFrame((new Date()).getTime());
 				}
 			}
 		} else {
@@ -133,12 +153,20 @@
 	});
 
 	// handle frame
+	var deathCount = 0;
 	function onFrame(time) {
 		
-		//var dt = time - onFrame.oldTime;
-		//onFrame.oldTime = time;
+		var dt = time - onFrame.oldTime;
+		onFrame.oldTime = time;
 
-		handleMovement(250);
+		if (deathCount < 25) {
+			console.log(dt);
+			deathCount++;
+		}
+
+		handleInput(dt);
+
+		applyPhysics(dt);
 
 		if (ownShipEntity) {
 			socket.emit(
@@ -147,17 +175,15 @@
 			);
 		}
 
-		Object.keys(ownProjectilesById).forEach(function (key) {
+		Object.keys(ownProjectilesById).forEach(function (id) {
 			socket.emit(
 				Packet.UPDATE_ENTITY, 
-				{ entity: ownProjectilesById[key].getModel() }
+				{ entity: ownProjectilesById[id].getModel() }
 			);
 		});
 
 		Keys.update();
 	}
-	// start frame handling
-	//onFrame.oldTime = 0;
 
 
 
@@ -172,6 +198,9 @@
 		this.m.x = data.x;
 		this.m.y = data.y;
 		this.m.type = data.type;
+
+		this.dx = 0;
+		this.dy = 0;
 		
 		this.el = {};
 		this.el.point = document.createElement('div');
@@ -207,6 +236,10 @@
 	Ship.prototype.update = function (model) {
 		this.m = model;
 		this.draw();
+	};
+
+	Ship.prototype.removeFromDOM = function () {
+		this.el.point.parentNode.removeChild(this.el.point);
 	};
 
 	Ship.prototype.getModel = function () {
@@ -268,14 +301,6 @@
 		return {
 			// update on frame
 			update: function () {
-				/*
-				Object.keys(keyIsDown).forEach(function (keyCode) {
-					console.log('downed keyCode = ' + keyCode);
-				});
-				Object.keys(keyIsPressed).forEach(function (keyCode) {
-					console.log('pressed keyCode = ' + keyCode);
-				});
-				*/
 				// reset presses
 				keyIsPressed = {};
 			},
@@ -303,11 +328,13 @@
 
 
 
-	function handleMovement(dt) {
+	function handleInput(dt) {
 		if (!ownShipEntity) return;
+		dt = dt || 1;
 		var ship = ownShipEntity;
-		var speed = 100 / dt;
+		var speed = 0.5 * dt;
 		var slowdown = 3 / 4;
+
 		// up left
 		if (Keys.isDown(Keys.UP) && Keys.isDown(Keys.LEFT)) {
 			speed = speed * slowdown;
@@ -350,6 +377,46 @@
 				ship.moveY(speed);
 			}
 		}
+	}
+
+	function applyPhysics(delta) {
+		var gameWidth = window.innerWidth;
+		var gameHeight = window.innerHeight;
+		var centerX = gameWidth / 2;
+		var centerY = gameHeight / 2;
+
+		var x_d = centerX - this.m.x;
+		var y_d = centerY - this.m.y;
+		var x_sqr = x_d*x_d;
+		var y_sqr = y_d*y_d;
+
+		var dist = Math.sqrt(x_sqr + y_sqr);
+
+		var pull = this.GRAVITY / dist;
+		//(x_d*x_d + y_d*y_d);
+
+		//if it has already rotated, make sure to premove
+		//this.preMove(delta);
+
+		this.velocity.dx += (
+			//x_sqr*pull
+			x_d * pull
+		);
+	    this.velocity.dy += (
+	    	//y_sqr*pull
+	    	y_d * pull
+	    );
+	    this.x += this.velocity.dx * delta;
+	    this.y += this.velocity.dy * delta;
+	    this.shipRotation += this.velocity.rotation * delta;
+
+
+
+
+
+
+
+
 	}
 
 

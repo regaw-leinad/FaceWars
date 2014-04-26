@@ -1,16 +1,302 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Testing</title>
-        <link rel="stylesheet" type="text/css" href="style/style.css">        
-    </head>
-    <body>
-        <h1 id="test">Sup, Facebook</h1>
-        <form id="nameForm">
-            <input id="nameText" type="text" name="nameText" value="" placeholder="userName">
-            <button type="submit">Submit</button>
-        </form>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-        <script src="/socket.io/socket.io.js"></script>
-        <script type="text/javascript" src="script/script.js"></script>
-    </body>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>sandbox</title>
+	<style type="text/css" media="screen">
+		.point {
+			width: 0;
+			height: 0;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+		}
+		.ship {
+			width: 50px;
+			height: 50px;
+			position: absolute;
+			z-index: 10;
+			top: 50%;
+			left: 50%;
+			margin-top: -25px;
+			margin-left: -25px;
+			border-radius: 100px;
+			opacity: 0.6;
+		}
+	</style>
+</head>
+<body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/script/salt.js"></script>
+<script src="/script/Ship.js"></script>
+<script type="text/javascript">
+
+
+
+	$(window).bind('beforeunload', function(eventObject) {
+	    socket.emit(Packet.USER_DISCONNECTING, { user: currentUser });
+	});
+
+
+	var Packet = {
+	    USER_AUTH_NEW: 0,
+	    USER_AUTH_RESPONSE: 1,
+	    USER_JOIN_SESSION: 2,
+	    USER_LEAVE_SESSION: 3,
+	    USER_DISCONNECTING: 4,
+	    UPDATE_ENTITY: 5,
+	    CHAT_MESSAGE: 6
+	};
+
+	var EntityType = {
+		SHIP: 0,
+		PROJECTILE: 1
+	};
+
+
+
+	var entitiesByID = {};
+	var ownProjectilesById = {};
+	var ownShipEntity;
+
+	var currentUser = {
+		id: undefined,
+		name: undefined,
+		color: undefined
+	};
+
+	var currentSession = {
+		id: undefined,
+		users: []
+	};
+
+	var entityExample = {
+		userName: undefined,
+		elementId: undefined,
+		type: undefined,
+		x: undefined,
+		y: undefined,
+		dx: undefined,
+		dy: undefined,
+		speed: undefined,
+		shipRotation: undefined,
+		moveRotation: undefined
+	};
+
+
+
+	//var socket = io.connect('http://localhost:1234');
+	var socket = io.connect('http://iuga.ischool.uw.edu:1234');
+
+	socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
+		if (data.err) {
+			console.error(data.err);
+			return;
+		}
+
+		currentUser = data.user;
+		currentSession = data.session;
+
+		console.log('auth success');
+		console.log(currentUser);
+		console.log(currentSession);
+
+		ownShipEntity = new Ship(Ship.createNewDataFromUser(currentUser));
+		entitiesByID[ownShipEntity.getId()] = ownShipEntity;
+
+		// begin packet loop
+		onFrame.oldTime = (new Date()).getTime();
+		onFrame((new Date()).getTime());
+
+	});
+
+	socket.emit(Packet.USER_AUTH_NEW, {
+		userName: salt(10),
+		color: '#' + Math.floor(Math.random() * 16777215).toString(16)
+	});
+
+	socket.on(Packet.USER_JOIN_SESSION, function (data) {
+		// add user to current session
+		currentSession.users[data.user.id] = data.user;
+	});
+
+	socket.on(Packet.USER_LEAVE_SESSION, function (data) {
+		// remove entities from DOM and reference
+		Object.keys(entitiesByID).forEach(function (entityID) {
+			if (entitiesByID[entityID].m.userName === data.user.name) {
+				entitiesByID[entityID].removeFromDOM();
+				delete entitiesByID[entityID];
+			}
+		});
+		// remove user from reference
+		delete currentSession.users[data.user.id];
+	});
+
+	socket.on(Packet.CHAT_MESSAGE, function(data) {
+		// Display the chat message here
+		// data { user: userObj, msg: '', time: timeStamp }
+	});
+
+	socket.on(Packet.UPDATE_ENTITY, function (data) {
+		if (entitiesByID[data.entity.id]) {
+			if (data.entity.type === EntityType.SHIP) {
+				entitiesByID[data.entity.id].update(data.entity);
+				if (data.entity.userName === currentUser.name) {
+					// packet loop lols
+					onFrame((new Date()).getTime());
+				}
+			}
+		} else {
+			entitiesByID[data.entity.id] = new Ship(data.entity);
+		}
+	});
+
+	// handle frame
+	var deathCount = 0;
+	function onFrame(time) {
+		
+		var dt = time - onFrame.oldTime;
+		onFrame.oldTime = time;
+
+		if (deathCount < 25) {
+			console.log(dt);
+			deathCount++;
+		}
+
+		handleMovement(dt);
+
+		if (ownShipEntity) {
+			socket.emit(
+				Packet.UPDATE_ENTITY, 
+				{ entity: ownShipEntity.getModel() }
+			);
+		}
+
+		Object.keys(ownProjectilesById).forEach(function (id) {
+			socket.emit(
+				Packet.UPDATE_ENTITY, 
+				{ entity: ownProjectilesById[id].getModel() }
+			);
+		});
+
+		Keys.update();
+	}
+
+
+
+
+
+
+	var Keys = (function () {
+		// state maps { keyCode: boolean }
+		var keyIsDown = {};
+		var keyIsPressed = {};
+		var keyPressLimbo = {};
+		// handle key down
+		window.addEventListener('keydown', function (e) {
+			var key = e.keyCode || e.which;
+			keyIsDown[key] = true;
+			if (!keyPressLimbo[key]) {
+				keyIsPressed[key] = true;
+				keyPressLimbo[key] = true;
+			}
+		});
+		// handle key up
+		window.addEventListener('keyup', function (e) {
+			var key = e.keyCode || e.which;
+			if (keyIsDown[key]) {
+				delete keyIsDown[key];
+			}
+			if (keyPressLimbo[key]) {
+				delete keyPressLimbo[key];
+			}
+		});
+		// public interface
+		return {
+			// update on frame
+			update: function () {
+				// reset presses
+				keyIsPressed = {};
+			},
+			// state check methods
+			isDown: function (keyCode) {
+				return keyIsDown[keyCode];
+			},
+			isPressed: function (keyCode) {
+				if (keyIsPressed[keyCode]) {
+					delete keyIsPressed[keyCode];
+					return true;
+				} else {
+					return false;
+				}
+			},
+			// keycodes
+			SPACEBAR: 32,
+			LEFT: 37,
+			UP: 38,
+			RIGHT: 39,
+			DOWN: 40
+		};
+	})();
+
+
+
+
+	function handleMovement(dt) {
+		if (!ownShipEntity) return;
+		dt = dt || 1;
+		var ship = ownShipEntity;
+		var speed = 0.5 * dt;
+		var slowdown = 3 / 4;
+		// up left
+		if (Keys.isDown(Keys.UP) && Keys.isDown(Keys.LEFT)) {
+			speed = speed * slowdown;
+			ship.moveX(-speed);
+			ship.moveY(-speed);
+		}
+		// up right
+		else if (Keys.isDown(Keys.UP) && Keys.isDown(Keys.RIGHT)) {
+			speed = speed * slowdown;
+			ship.moveX(speed);
+			ship.moveY(-speed);
+		}
+		// down left
+		else if (Keys.isDown(Keys.DOWN) && Keys.isDown(Keys.LEFT)) {
+			speed = speed * slowdown;
+			ship.moveX(-speed);
+			ship.moveY(speed);
+		}
+		// down right
+		else if (Keys.isDown(Keys.DOWN) && Keys.isDown(Keys.RIGHT)) {
+			speed = speed * slowdown;
+			ship.moveX(speed);
+			ship.moveY(speed);
+		}
+		else {
+			// left
+			if (Keys.isDown(Keys.LEFT)) {
+				ship.moveX(-speed);
+			}
+			// right
+			if (Keys.isDown(Keys.RIGHT)) {
+				ship.moveX(speed);
+			}
+			// up
+			if (Keys.isDown(Keys.UP)) {
+				ship.moveY(-speed);
+			}
+			// down
+			if (Keys.isDown(Keys.DOWN)) {
+				ship.moveY(speed);
+			}
+		}
+	}
+
+
+
+
+</script>
+</body>
 </html>
