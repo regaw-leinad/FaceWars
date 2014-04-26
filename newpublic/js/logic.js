@@ -1,7 +1,10 @@
 // circle resize logic
+var main = $('#layer0');
+
 function resize() {
 	var porthole = document.getElementById('porthole');
 	var circle = document.getElementById('circle');
+
 	porthole.setAttribute('height', window.innerHeight);
 	porthole.setAttribute('width', window.innerWidth);
 
@@ -14,6 +17,8 @@ function resize() {
 	circle.setAttribute('cx', xcenter);
 	circle.setAttribute('cy', ycenter);
 	circle.setAttribute('r', smaller / 2 + 500);
+
+	main.css('margin-top', window.innerHeight / 4 + 'px');
 }
 
 // shape movement logic
@@ -63,4 +68,5 @@ function checkKey(e) {
 
 $('#submit').click(function(){
 	$('#layer0').fadeOut()
+	$('#layer1').fadeIn()
 })
