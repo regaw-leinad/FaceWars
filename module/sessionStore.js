@@ -16,7 +16,7 @@ SessionStore.prototype.removeSession = function(session) {
 SessionStore.prototype.getSessionByUser = function(user) {
     for (var key in this.sessions) {
         var session = this.sessions[key];
-        if (session.getUsers().hasOwnProperty(user.id)) {
+        if (session.hasUser(user)) {
             return session;
         }
     }

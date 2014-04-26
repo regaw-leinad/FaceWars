@@ -43,7 +43,7 @@ socket.on('connection', function(client) {
                 var session = sessions.getNextOpenSession();
                 session.addUser(newUser, client);
 
-                client.emit(Packet.USER_AUTH_RESPONSE, { session: mainSession });
+                client.emit(Packet.USER_AUTH_RESPONSE, { user: newUser, session: mainSession });
                 client.broadcast.to(session.getId).emit(Packet.USER_JOIN_SESSION, { user: newUser });
             }
         }
@@ -56,14 +56,15 @@ socket.on('connection', function(client) {
         if (data.user) {
             var user = data.user;
 
-            var registeredUserId = self.getUserIdBySocketId(client.id);
+            var registeredUserId = users.getUserIdBySocketId(client.id);
             if (registeredUserId && registeredUserId === user.id) {
                 // remove from users and session
                 users.removeUser(user);
                 var session = sessions.getSessionByUser(user);
                 session.removeUser(user, client);
                 socket.sockets.in(session.id).emit(Packet.USER_LEAVE_SESSION, { user: user });
-            }
+            } 
+            // else ignore disconnect
         }
     });
 });
