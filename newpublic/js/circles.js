@@ -18,8 +18,8 @@ function resize() {
 	//circle.setAttribute('cx', xcenter);
 	//circle.setAttribute('cy', ycenter);
 
-	centercircle(circle, xcenter, ycenter)
-	centercircle(star, xcenter, ycenter)
+	centerCircle(circle, xcenter, ycenter)
+	centerCircle(star, xcenter, ycenter)
 
 	circle.setAttribute('r', smaller / 2 + 500);
 	star.setAttribute('r', smaller / 25);
@@ -32,16 +32,23 @@ function resize() {
 	main.css('margin-top', window.innerHeight / 4 + 'px');
 }
 
-function centercircle(circle, xcenter, ycenter) {
+function centerCircle(circle, xcenter, ycenter) {
 	circle.setAttribute('cx', xcenter);
 	circle.setAttribute('cy', ycenter);
 }
 
 $('#submit').click(function(){
+	socket.emit(Packet.USER_AUTH_NEW, {
+		userName: $('#username').val(),
+		color: $('#color').val()
+	}); 
+})
+
+function fadeGameIn() {
 	$('#layer0').fadeOut()
 	$('#layer1').fadeIn()
 	$('#gameboard').fadeIn()
-})
+}
 
 // // shape movement logic
 // var framerate = 30;

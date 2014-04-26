@@ -11,7 +11,7 @@ function FileServer(port) {
         if (parsedUrl.pathname === '/') {
             parsedUrl.pathname = '/index.html';
         }
-        var filename = './public' + parsedUrl.pathname;
+        var filename = './newpublic' + parsedUrl.pathname;
         fs.exists(filename, function (exists) {
             if (exists) {
                 res.writeHeader(200, {'Content-Type': mime.lookup(filename)});
