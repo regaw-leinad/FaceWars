@@ -37,3 +37,14 @@ these things need to be agreed on
 - game session id
 - player name and colors
 - player starting positions
+
+
+
+
+newnew
+- asteroids style, move and point separately
+- square root is too heavy, avoid dx, dy
+- instead!
+	- store shipAngle & moveAngle
+	- store x, y, speed
+

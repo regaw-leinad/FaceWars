@@ -49,7 +49,7 @@
 			this.b + ', ' +
 			this.a + ')';
 	};
-	
+
 
 
 	function Ship() {
@@ -90,6 +90,66 @@
 
 
 	var ship = new Ship();
+
+
+
+
+
+
+
+
+	var Keys = (function () {
+		// state maps { keyCode: boolean }
+		var keyIsDown = {};
+		var keyIsPressed = {};
+		// handle key down
+		window.addEventListener('keydown', function (e) {
+			var key = e.keyCode || e.which;
+			keyIsDown[key] = true;
+			keyIsPressed[key] = true;
+		});
+		// handle key up
+		window.addEventListener('keyup', function (e) {
+			var key = e.keyCode || e.which;
+			if (!keyIsDown[key]) return;
+			delete keyIsDown[key];
+		});
+		// public interface
+		return {
+			isDown: function (keyCode) {
+				return keyIsDown[keyCode];
+			},
+			isPressed: function (keyCode) {
+				if (keyIsPressed[keyCode]) {
+					delete keyIsPressed[keyCode];
+					return true;
+				} else {
+					return false;
+				}
+			},
+			SPACE: 32,
+			LEFT: 37,
+			UP: 38,
+			RIGHT: 39,
+			DOWN: 40
+		};
+	})();
+
+
+
+	function onFrame(time) {
+		console.log('FRAME! ' + time);
+		Object.keys(Keys.isDown).forEach(function (keyCode) {
+			console.log('keyCode = ' + keyCode);
+		});
+		requestAnimationFrame(onFrame);
+	}
+
+	//requestAnimationFrame(onFrame);
+
+
+
+
 
 
 
