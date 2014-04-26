@@ -20,7 +20,7 @@ function Projectile(data) {
 	this.el.Projectile.style.backgroundColor = this.m.color;
 	
 	this.el.point.appendChild(this.el.Projectile);
-	document.body.appendChild(this.el.point);
+	Board.$el.appendChild(this.el.point);
 
 	this.draw();
 
