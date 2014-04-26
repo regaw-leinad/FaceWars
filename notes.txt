@@ -48,3 +48,11 @@ newnew
 	- store shipAngle & moveAngle
 	- store x, y, speed
 
+NEW VECTOR PACKET
+- id
+- type
+- x
+- y
+- shipRotation
+- moveRotation
+- userID
