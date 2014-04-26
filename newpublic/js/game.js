@@ -69,7 +69,7 @@
 		if (!ownShipEntity) return;
 		dt = dt || 1;
 		var ship = ownShipEntity;
-		var speed = 0.3 * dt;
+		var speed = 0.3 * dt * 0.05;
 		var rotation = 6;
 
 		// left

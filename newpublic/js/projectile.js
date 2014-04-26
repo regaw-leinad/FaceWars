@@ -15,11 +15,11 @@ function Projectile(data) {
 	this.el.point = document.createElement('div');
 	this.el.point.setAttribute('id', this.m.id);
 	this.el.point.setAttribute('class', 'point');
-	this.el.Projectile = document.createElement('div');
-	this.el.Projectile.setAttribute('class', 'projectile');
-	this.el.Projectile.style.backgroundColor = this.m.color;
+	this.el.projectile = document.createElement('div');
+	this.el.projectile.setAttribute('class', 'projectile');
+	this.el.projectile.style.backgroundColor = this.m.color;
 	
-	this.el.point.appendChild(this.el.Projectile);
+	this.el.point.appendChild(this.el.projectile);
 	Board.$el.append(this.el.point);
 
 	this.draw();
@@ -61,12 +61,6 @@ Projectile.prototype.getType = function () {
 
 Projectile.prototype.getId = function () {
 	return this.m.id;
-};
-
-Ship.prototype.thrust = function(amount) {
-	var rad = this.shipRotation * Math.PI / 180;
-	this.dx += amount * Math.cos(rad);
-	this.dy += amount * Math.sin(rad);
 };
 
 Projectile.prototype.setColor = function(color) {

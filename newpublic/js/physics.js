@@ -22,8 +22,12 @@ function applyGravity(entity, dt) {
     	y_d*pull
     );
  
-    var speed = Math.sqrt(entity.dx*entity.dx + entity.dy*entity.dy);
-    if(speed > 0.3) {
+    var speed = Math.sqrt(
+        entity.dx * entity.dx + 
+        entity.dy * entity.dy
+    );
+
+    if (speed > 0.3) {
     	entity.dx *= 0.85;
     	entity.dy *= 0.85;
     }
@@ -31,7 +35,7 @@ function applyGravity(entity, dt) {
     entity.m.x += entity.dx * dt;
     entity.m.y += entity.dy * dt;
  
-    if(entity.m.x === Board.centerX &&
+    if (entity.m.x === Board.centerX &&
     	entity.m.y === Board.centerY) {
     	// TODO
     }

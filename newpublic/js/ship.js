@@ -1,5 +1,5 @@
 function Ship(data) {
-	
+
 	this.m = {};
 	this.m.id = data.id;
 	this.m.color = data.color;
@@ -68,9 +68,10 @@ Ship.prototype.getId = function () {
 };
 
 Ship.prototype.thrust = function(amount) {
-	var rad = this.shipRotation * Math.PI / 180;
+	var rad = this.m.shipRotation * Math.PI / 180;
 	this.dx += amount * Math.cos(rad);
 	this.dy += amount * Math.sin(rad);
+
 };
 
 Ship.prototype.rotateCCW = function(deg) {
