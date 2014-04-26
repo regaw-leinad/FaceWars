@@ -48,7 +48,7 @@ newnew
 	- store shipAngle & moveAngle
 	- store x, y, speed
 
-NEW VECTOR PACKET
+NEW ENTITY PACKET
 - id
 - type
 - x
