@@ -161,7 +161,7 @@
 
 
 
-	function handleMovement(dtime) {
+	function handleMovement(dt) {
 		var speed = 10;
 		var slowdown = 3 / 4;
 		// up left
@@ -213,14 +213,13 @@
 
 	// handle frame 
 	function onFrame(time) {
-		
-		var dtime = time - onFrame.oldTime;
+
+		var dt = time - onFrame.oldTime;
+		handleMovement(dt);
 
 		if (Keys.isPressed(Keys.SPACEBAR)) {
 			ship.setColor(new RGBA());
 		}
-
-		handleMovement(dtime);
 		
 		Keys.update();
 		requestAnimationFrame(onFrame);
