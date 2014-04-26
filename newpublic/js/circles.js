@@ -46,7 +46,7 @@ $('#submit').click(function(){
 
 function fadeGameIn() {
 	$('#layer0').fadeOut()
-	$('#layer1').fadeIn()
+//	$('#layer1').fadeIn()
 	$('#gameboard').fadeIn()
 }
 
