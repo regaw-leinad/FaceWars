@@ -14,10 +14,15 @@ function FileServer(port) {
         var filename = './newpublic' + parsedUrl.pathname;
         fs.exists(filename, function (exists) {
             if (exists) {
-                res.writeHeader(200, {'Content-Type': mime.lookup(filename)});
+                res.writeHeader(200, {
+                    'Content-Type': mime.lookup(filename),
+                    'Cache-Control': 'public; max-age=31536000'
+                });
                 fs.createReadStream(filename).pipe(res);
             } else {
-                res.writeHeader(404, {'Content-Type': 'text/html'});
+                res.writeHeader(404, {
+                    'Content-Type': 'text/html'
+                });
                 res.end('File not found');
             }
         });
