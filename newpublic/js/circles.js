@@ -74,6 +74,28 @@ function randomColors() {
 	$('.preview').attr('style', 'background-color: rgb('+ r + ','+ g + ','+ b + ');');
 }
 
+function raiseUsernameError() {
+	var username = document.getElementById('username')
+	  , inputGrp = document.getElementById('inputs');
+	
+	username.value = '';
+	inputGrp.classList.add("has-error");
+	username.setAttribute('placeholder', 'Invalid username');
+	username.onclick = function(){
+		inputGrp.classList.remove("has-error");
+		username.setAttribute('placeholder', '');
+	};
+	username.onkeydown = function(){
+		inputGrp.classList.remove("has-error");
+		username.setAttribute('placeholder', '');
+	};
+
+}
+
+function clearUsername() {
+	inputGrp.classList.remove("has-error");
+	username.setAttribute('placeholder', '');
+}
 
 // // shape movement logic
 // var framerate = 30;

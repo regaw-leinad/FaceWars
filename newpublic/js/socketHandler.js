@@ -9,8 +9,8 @@ var Packet = {
     ENTITY_DIE: 7
 };
 
-//var socket = io.connect('http://localhost:1234');
-var socket = io.connect('http://iuga.ischool.uw.edu:1234');
+var socket = io.connect('http://localhost:1234');
+//var socket = io.connect('http://iuga.ischool.uw.edu:1234');
 
 socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 
@@ -18,6 +18,7 @@ socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 
 	if (data.err) {
 		console.error(data.err);
+		raiseUsernameError();
 		return;
 	}
 
