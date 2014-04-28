@@ -16,7 +16,7 @@ function setUserBox(users) {
 	Object.keys(users).forEach(function (key) {
 		var user = users[key];
 		html += '<strong style="color:' + user.color + '">';
-		html += user.name;
+		html += user.displayName;
 		html += '</strong><br>';
 	});
 	userBoxEl.innerHTML = html;
