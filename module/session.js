@@ -1,7 +1,7 @@
 var salt = require('./salt');
 
 function Session(maxUsers) {
-    this.maxUsers = maxUsers || 1337;
+    this.maxUsers = maxUsers || 5;
     this.id = (new Date()).getTime() + '-' + salt();
     this.users = {};
     this.userCount = 0;
@@ -37,7 +37,5 @@ Session.prototype.getUserCount = function() {
 Session.prototype.canUserJoin = function() {
     return this.userCount < this.maxUsers;
 };
-
-
 
 module.exports = Session;

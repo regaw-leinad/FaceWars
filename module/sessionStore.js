@@ -1,3 +1,4 @@
+var Session = require('./session.js');
 
 function SessionStore() {
     this.sessions = {};
@@ -32,8 +33,11 @@ SessionStore.prototype.getNextOpenSession = function() {
         }
     }
 
-    // Should never happen?!
-    return false;
+    console.log('All sessions full, creating new session');
+
+    var session = new Session(5);
+    addSession(session);
+    return session;
 };
 
 module.exports = SessionStore;
