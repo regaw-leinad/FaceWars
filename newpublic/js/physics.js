@@ -1,39 +1,18 @@
-function applyGravity(entity, dt) {
-	var x_d = Board.centerX - entity.m.x;
-	var y_d = Board.centerY - entity.m.y;
-	var x_sqr = x_d*x_d;
-	var y_sqr = y_d*y_d;
- 
-	var dist = Math.sqrt(x_sqr + y_sqr);
- 
-	var pull = 0.03 / dist;
-	//(x_d*x_d + y_d*y_d);
- 
-	//if it has already rotated, make sure to premove
-	//this.preMove(delta);
- 
-	entity.dx += (
-		//x_sqr*pull
-		x_d*pull
-	);
- 
-    entity.dy += (
-    	//y_sqr*pull
-    	y_d*pull
-    );
- 
-    var speed = Math.sqrt(
-        entity.dx * entity.dx + 
-        entity.dy * entity.dy
-    );
+function applyGravity(cx, cy, amount, entity) {
+    var distX = cx - entity.m.x;
+    var distY = cy - entity.m.y;
+    var rad = Math.atan2(distY, distX);
+    var distMag = Math.sqrt(distX * distX + distY * distY);
+    var pull = amount / distMag;
 
-    if (speed > 0.3) {
-    	entity.dx *= 0.85;
-    	entity.dy *= 0.85;
-    }
-	
-    entity.m.x += entity.dx * dt;
-    entity.m.y += entity.dy * dt;
+    var newDx = entity.dx + pull * Math.cos(rad);
+    var newDy = entity.dy + pull * Math.sin(rad);
+
+    entity.dx = newDx;
+    entity.dy = newDy;
+
+    entity.m.x += newDx;
+    entity.m.y += newDy;
 }
 
 function checkCollisions() {
@@ -41,20 +20,30 @@ function checkCollisions() {
     Object.keys(ownProjectilesById).forEach(function (projId) {
         var p = ownProjectilesById[projId];
 
-        Object.keys(entitiesByID).forEach(function(entityId) {
-            var entity = entitiesByID[entityId];
-            if (entity.m.id !== p.m.id && entity.m.userName !== p.m.userName) {
-                // check collision here
-                if (isInsideCircle(p.m.x, p.m.y, entity.m.x, entity.m.y, 12.5)) {
-                    delete ownProjectilesById[projId];
-                    delete entitiesByID[projId];
-                    console.log('emitting ENTITY_DIE for projectile');
-                    socket.emit(Packet.ENTITY_DIE, { entity: entity.m });
-                    kills++;
-                    setKillBox(kills);
+        if (isInsideCircle(p.m.x, p.m.y, Board.centerX, Board.centerY, 30)) {
+            delete ownProjectilesById[projId];
+            console.log('emitting ENTITY_DIE for projectile');
+            socket.emit(Packet.ENTITY_DIE, { entity: p.m });
+        } else if (p.m.x < 0 || p.m.x > Board.width || p.m.y < 0 || p.m.y > Board.height) {
+            delete ownProjectilesById[projId];
+            console.log('emitting ENTITY_DIE for projectile');
+            socket.emit(Packet.ENTITY_DIE, { entity: p.m });
+        } else {
+            Object.keys(entitiesByID).forEach(function(entityId) {
+                var entity = entitiesByID[entityId];
+                if (entity.m.id !== p.m.id && entity.m.userName !== p.m.userName) {
+                    // check collision here
+                    if (isInsideCircle(p.m.x, p.m.y, entity.m.x, entity.m.y, 12.5)) {
+                        delete ownProjectilesById[projId];
+                        delete entitiesByID[projId];
+                        console.log('emitting ENTITY_DIE for projectile');
+                        socket.emit(Packet.ENTITY_DIE, { entity: entity.m });
+                        kills++;
+                        setKillBox(kills);
+                    }
                 }
-            }
-        });
+            });
+        }
     });
 
     var c = ownShipEntity;

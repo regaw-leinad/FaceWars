@@ -9,8 +9,8 @@ var Packet = {
     ENTITY_DIE: 7
 };
 
-//var socket = io.connect('http://localhost:1234');
-var socket = io.connect('http://iuga.ischool.uw.edu:1234');
+var socket = io.connect('http://localhost:1234');
+//var socket = io.connect('http://iuga.ischool.uw.edu:1234');
 
 socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 
@@ -18,7 +18,7 @@ socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 
 	if (data.err) {
 		console.error(data.err);
-		raiseUsernameError();
+		raiseUsernameError(data.err);
 		return;
 	}
 
@@ -35,6 +35,7 @@ socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 	entitiesByID[ownShipEntity.getId()] = ownShipEntity;
 
 	// begin packet loop
+	Keys.update();
 	onFrame.oldTime = (new Date()).getTime();
 	onFrame((new Date()).getTime());
 
@@ -106,8 +107,14 @@ socket.on(Packet.ENTITY_DIE, function (data) {
 	if (entitiesByID[data.entity.id]) {
 		entitiesByID[data.entity.id].removeFromDOM();
 		delete entitiesByID[data.entity.id];
-		if (ownShipEntity.m.id === data.entity.id) {
+		if (ownShipEntity && ownShipEntity.m.id === data.entity.id) {
 			ownShipEntity = null;
+			Object.keys(ownProjectilesById).forEach(function(id) {
+				var proj = ownProjectilesById[id];
+				proj.removeFromDOM();
+				delete ownProjectilesById[id];
+				delete entitiesByID[id];
+			});
 		}
 	}
 	// TODO explosion

@@ -51,6 +51,14 @@ function centerCircle(circle, xcenter, ycenter) {
 // 	}); 
 // })
 
+$(document).ready(function() {
+	setTimeout(function() {
+		var input = document.getElementById('username');
+		console.log(input);
+		input.focus();
+	}, 1000);
+});
+
 $('input[type=text]').on('keyup', function(e) {
     if (e.which == 13) {
         e.preventDefault();
@@ -74,13 +82,13 @@ function randomColors() {
 	$('.preview').attr('style', 'background-color: rgb('+ r + ','+ g + ','+ b + ');');
 }
 
-function raiseUsernameError() {
+function raiseUsernameError(err) {
 	var username = document.getElementById('username')
 	  , inputGrp = document.getElementById('inputs');
 	
 	username.value = '';
 	inputGrp.classList.add("has-error");
-	username.setAttribute('placeholder', 'Invalid username');
+	username.setAttribute('placeholder', err);
 	username.onclick = function(){
 		inputGrp.classList.remove("has-error");
 		username.setAttribute('placeholder', '');

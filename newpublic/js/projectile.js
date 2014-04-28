@@ -27,15 +27,13 @@ function Projectile(data) {
 	var self = this;
 	setTimeout(function() {
 		if(entitiesByID[self.m.id]) {
-			self.removeFromDOM();
-			delete entitiesByID[self.m.id];
 			delete ownProjectilesById[self.m.id];
 			socket.emit(
 				Packet.ENTITY_DIE, 
 				{ entity: self.m }
 			);
 		}
-	}, 4000);
+	}, 7000);
 
 	return this;
 
@@ -50,8 +48,8 @@ Projectile.createNewDataFromUser = function (user, shipModel, dx, dy) {
 	data.y = shipModel.y;
 	data.type = EntityType.PROJECTILE;
 	var rad = shipModel.shipRotation * Math.PI / 180;
-	data.dx = 50 * Math.cos(rad) + dx; 
-	data.dy = 50 * Math.sin(rad) + dy;
+	data.dx = 0.22 * Math.cos(rad); 
+	data.dy = 0.22 * Math.sin(rad);
 	return data;
 };
 

@@ -117,3 +117,20 @@ socket.on('connection', function(client) {
         }
     })
 });
+
+process.stdin.resume();
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', function(data) {
+    if (data.toString().trim() !== '') {
+        var args = data.toString().split(' ');
+        var cmd = args.splice(0, 1).toString().trim();
+        onCommand(cmd, args);   
+    }
+});
+
+function onCommand(cmd, args) {
+    if (cmd === 'stop') {
+        console.log('shutting down server...');
+        process.exit(1);
+    }
+}

@@ -38,8 +38,24 @@ Ship.createNewDataFromUser = function (user) {
 	data.id = (new Date()).getTime() + '-' + salt();
 	data.color = user.color;
 	data.userName = user.name;
-	data.x = 10;
-	data.y = 10;
+	switch (randomIntBetween(1, 4)) {
+		case 1:
+			data.x = 40;
+			data.y = 40;
+			break;
+		case 2:
+			data.x = Board.width - 40;
+			data.y = 40;
+			break;
+		case 3:
+			data.x = Board.width - 40;
+			data.y = Board.height - 40;
+			break;
+		case 4:
+			data.x = 40;
+			data.y = Board.height - 40;
+			break;
+	}
 	data.type = EntityType.SHIP;
 	data.shipRotation = 70;
 	data.moveRotation = 70;
@@ -79,8 +95,12 @@ Ship.prototype.getId = function () {
 
 Ship.prototype.thrust = function(amount) {
 	var rad = this.m.shipRotation * Math.PI / 180;
-	this.dx += amount * Math.cos(rad);
-	this.dy += amount * Math.sin(rad);
+	var newDx = this.dx + amount * Math.cos(rad);
+	var newDy = this.dy + amount * Math.sin(rad);
+	if (Math.sqrt(newDx * newDx + newDy * newDy) < 0.5) {
+		this.dx = newDx;
+		this.dy = newDy;
+	}
 };
 
 Ship.prototype.rotateCCW = function(deg) {
