@@ -36,7 +36,7 @@ SessionStore.prototype.getNextOpenSession = function() {
     console.log('All sessions full, creating new session');
 
     var session = new Session(5);
-    addSession(session);
+    this.addSession(session);
     return session;
 };
 
