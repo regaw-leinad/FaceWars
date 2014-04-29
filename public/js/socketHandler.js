@@ -11,7 +11,6 @@ var Packet = {
 
 var socket = io.connect('http://localhost:1234');
 //var socket = io.connect('http://iuga.ischool.uw.edu:1234');
-var lastUpdateTime = 0;
 
 socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 	console.log('on USER_AUTH_RESPONSE');
