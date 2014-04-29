@@ -41,20 +41,16 @@ $(window).on('resize', function (e) {
 	Board.centerY = Board.height / 2;
 });
 
-var count = 0;
-
 // handle frame
 function onFrame() {
-	if (count++ % 1000 == 0) {
-		console.log(pingManager.getCalculatedPing());
-	}
+	var ping = pingManager.getCalculatedPing();
 
 	// handle user keyboard input
-	handleInput();
+	handleInput(ping);
 
 	// update ship
 	if (ownShipEntity) {
-		applyGravity(Board.centerX, Board.centerY, 0.02, ownShipEntity);
+		applyGravity(Board.centerX, Board.centerY, 0.02, ownShipEntity, ping);
 		socket.emit(
 			Packet.UPDATE_ENTITY, 
 			{ entity: ownShipEntity.getModel() }
@@ -65,7 +61,7 @@ function onFrame() {
 	// update projectiles
 	Object.keys(ownProjectilesById).forEach(function (id) {
 		var projectile = ownProjectilesById[id];
-		applyGravity(Board.centerX, Board.centerY, 0.04, projectile);
+		applyGravity(Board.centerX, Board.centerY, 0.04, projectile, ping);
 		socket.emit(
 			Packet.UPDATE_ENTITY, 
 			{ entity: projectile.getModel() }
@@ -78,11 +74,10 @@ function onFrame() {
 	Keys.update();
 }
 
-function handleInput() {
+function handleInput(ping) {
 	if (!ownShipEntity) return;
 	var ship = ownShipEntity;
-	var ping = pingManager.getCalculatedPing();
-	var speed = 0.00009 * ping;
+	var speed = 0.00009 * Math.pow(ping, 2);
 	var rotation = 0.15 * ping;
 
 	// left
