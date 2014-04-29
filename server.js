@@ -15,9 +15,6 @@ var fileServer = new FileServer(1234);
 var users = new UserStore();
 var sessions = new SessionStore();
 
-var mainSession = new Session();
-sessions.addSession(mainSession);
-
 var socket = io.listen(fileServer, { 'log level': 1 });
 
 socket.on('connection', function(client) {
