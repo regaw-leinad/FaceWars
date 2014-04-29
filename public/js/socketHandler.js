@@ -72,7 +72,6 @@ socket.on(Packet.UPDATE_ENTITY, function (data) {
 		if (data.entity.type === EntityType.SHIP) {
 			entitiesByID[data.entity.id].update(data.entity);
 			if (data.entity.userName === currentUser.name) {
-				var now = (new Date()).getTime();
 				// packet loop lols
 				onFrame();
 			}
