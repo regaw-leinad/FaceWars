@@ -34,6 +34,7 @@ socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 	entitiesByID[ownShipEntity.getId()] = ownShipEntity;
 
 	// begin packet loop
+	pingManager.addPing(1);
 	Keys.update();
 	onFrame();
 

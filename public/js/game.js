@@ -77,7 +77,8 @@ function onFrame() {
 function handleInput(ping) {
 	if (!ownShipEntity) return;
 	var ship = ownShipEntity;
-	var speed = 0.00009 * Math.pow(ping, 2);
+	var ping2 = ping * ping;
+	var speed = 0.00009 * ping2;
 	var rotation = 0.15 * ping;
 
 	// left
