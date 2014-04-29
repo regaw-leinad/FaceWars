@@ -43,7 +43,7 @@ socket.on('connection', function(client) {
                 var session = sessions.getNextOpenSession();
                 session.addUser(newUser, client);
 
-                client.emit(Packet.USER_AUTH_RESPONSE, { user: newUser, session: mainSession });
+                client.emit(Packet.USER_AUTH_RESPONSE, { user: newUser, session: session });
                 client.broadcast.to(session.getId).emit(Packet.USER_JOIN_SESSION, { user: newUser });
             }
         }
