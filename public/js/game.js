@@ -8,7 +8,7 @@ var EntityType = {
 };
 
 var pingManager = new PingManager();
-var lastUpdateTime = 0;
+var lastUpdateTime = (new Date()).getTime();
 
 var entitiesByID = {};
 var ownProjectilesById = {};
@@ -48,7 +48,7 @@ function onFrame() {
 	if (count++ % 1000 == 0) {
 		console.log(pingManager.getCalculatedPing());
 	}
-	
+
 	// handle user keyboard input
 	handleInput();
 
