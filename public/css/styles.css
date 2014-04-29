@@ -159,7 +159,7 @@ li img {
 	right: -20px;
 }
 
-#star, #star-container {
+.star {
 	z-index: 10;
 }
 

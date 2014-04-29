@@ -7,6 +7,8 @@ var EntityType = {
 	PROJECTILE: 1
 };
 
+var stars = [];
+
 var entitiesByID = {};
 var ownProjectilesById = {};
 var ownShipEntity;
@@ -27,6 +29,7 @@ var currentSession = {
 
 var Board = {};
 Board.$el = $('#gameboard');
+Board.$stars = $('#star-container');
 Board.width = window.innerWidth;
 Board.height = window.innerHeight;
 Board.centerX = Board.width / 2;
@@ -38,6 +41,9 @@ $(window).on('resize', function (e) {
 	Board.centerY = Board.height / 2;
 });
 
+// Add initial stars here
+stars.push(new Star(Board.centerX, Board.centerY, 30, 0.02, 0.04));
+
 // handle frame
 function onFrame() {
 	// handle user keyboard input
@@ -45,7 +51,9 @@ function onFrame() {
 
 	// update ship
 	if (ownShipEntity) {
-		applyGravity(Board.centerX, Board.centerY, 0.02, ownShipEntity);
+		stars.forEach(function(s) {
+			applyGravity(s.cx, s.cy, s.shipGrav, ownShipEntity);
+		});
 		socket.emit(
 			Packet.UPDATE_ENTITY, 
 			{ entity: ownShipEntity.getModel() }
@@ -55,7 +63,9 @@ function onFrame() {
 	// update projectiles
 	Object.keys(ownProjectilesById).forEach(function (id) {
 		var projectile = ownProjectilesById[id];
-		applyGravity(Board.centerX, Board.centerY, 0.04, projectile);
+		stars.forEach(function(s) {
+			applyGravity(s.cx, s.cy, s.projGrav, projectile);
+		});
 		socket.emit(
 			Packet.UPDATE_ENTITY, 
 			{ entity: projectile.getModel() }

@@ -12,7 +12,6 @@ function load() {
 function resize() {
 	var porthole = document.getElementById('porthole');
 	var circle = document.getElementById('circle');
-	var star = document.getElementById('star');
 
 	porthole.setAttribute('height', window.innerHeight);
 	porthole.setAttribute('width', window.innerWidth);
@@ -26,7 +25,6 @@ function resize() {
 	//circle.setAttribute('cy', ycenter);
 
 	centerCircle(circle, xcenter, ycenter)
-	centerCircle(star, xcenter, ycenter)
 
 	//circle.setAttribute('r', smaller / 2 + 500);
 	//star.setAttribute('r', smaller / 25);
@@ -43,7 +41,6 @@ function centerCircle(circle, xcenter, ycenter) {
 $(document).ready(function() {
 	setTimeout(function() {
 		var input = document.getElementById('username');
-		console.log(input);
 		input.focus();
 	}, 1000);
 });

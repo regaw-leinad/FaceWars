@@ -27,7 +27,7 @@
 	</div>
 
 	<div id="gameboard">
-		<svg id="star-container" height="100%" width="100%">
+		<svg id="star-container" class="star" height="100%" width="100%">
 			<defs>
 				<radialGradient id="grad2" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
 					<stop offset="0%" style="stop-color:rgb(255,255,255);
@@ -35,7 +35,6 @@
 					<stop offset="100%" style="stop-color:rgb(255,255,0);stop-opacity:1"/>
 				</radialGradient>
 			</defs>
-			<circle id="star" r="30" fill="url(#grad2)"/>
 		</svg>
 	</div>
 
@@ -66,14 +65,15 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>    
 	<script src="/socket.io/socket.io.js"></script>
 	<!--<script src="js/pingManager.js"></script>-->
+	<script src="js/salt.js"></script>
 	<script src="js/parallax.js"></script>
 	<script src="js/circles.js"></script>
+	<script src="js/star.js"></script>
 	<script src="js/ship.js"></script>
 	<script src="js/projectile.js"></script>
 	<script src="js/keys.js"></script>
 	<script src="js/socketHandler.js"></script>
 	<script src="js/game.js"></script>
-	<script src="js/salt.js"></script>
 	<script src="js/physics.js"></script>
 	<script src="js/picker.js"></script>
 	<script src="js/stats.js"></script>

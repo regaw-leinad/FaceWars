@@ -24,7 +24,8 @@ socket.on('connection', function(client) {
     console.log(client.id + ' has connected');
 
     client.on(Packet.USER_AUTH_NEW, function(data) {
-        console.log('Received USER_AUTH_NEW Packet');
+        var address = client.handshake.address;
+        console.log('Received USER_AUTH_NEW Packet from: ' + address.address + ':' + address.port);
         console.log(data);
 
         if (users.getUserIdBySocketId(client.id)) {
