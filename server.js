@@ -44,7 +44,7 @@ socket.on('connection', function(client) {
                 session.addUser(newUser, client);
 
                 client.emit(Packet.USER_AUTH_RESPONSE, { user: newUser, session: session });
-                client.broadcast.to(session.getId).emit(Packet.USER_JOIN_SESSION, { user: newUser });
+                client.broadcast.to(session.id).emit(Packet.USER_JOIN_SESSION, { user: newUser });
             }
         }
     });
