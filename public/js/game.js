@@ -16,16 +16,23 @@ var ammoAmt = 10;
 var lastShot = 0;
 var kills = 0;
 
-var currentUser = {
-	id: undefined,
-	name: undefined,
-	color: undefined
-};
+var currentUser;
+var currentSession;
 
-var currentSession = {
-	id: undefined,
-	users: []
-};
+function getDisplayName(userName) {
+	var result = userName;
+	Object.keys(currentSession.users).some(function(element, index, array) {
+		var user = currentSession.users[element];
+		if (user.name === userName) {
+			result = user.displayName;
+			return true;
+		}
+
+		return false;
+	});
+
+	return result;
+}
 
 var Board = {};
 Board.$el = $('#gameboard');

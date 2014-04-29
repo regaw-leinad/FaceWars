@@ -21,7 +21,7 @@ function Ship(data) {
 	this.el.ship.style.borderColor = 'transparent transparent transparent ' + this.m.color;
 	this.el.label = document.createElement('div');
 	this.el.label.setAttribute('class', 'label');
-	this.el.label.innerHTML = data.userName;
+	this.el.label.innerHTML = getDisplayName(data.userName);
 	this.el.label.style.color = this.m.color;
 	
 	this.el.point.appendChild(this.el.ship);
