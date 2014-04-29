@@ -1,9 +1,9 @@
-function applyGravity(cx, cy, amount, entity, ping) {
+function applyGravity(cx, cy, amount, entity) {
     var distX = cx - entity.m.x;
     var distY = cy - entity.m.y;
     var rad = Math.atan2(distY, distX);
     var distMag = Math.sqrt(distX * distX + distY * distY);
-    var pull = amount * ping / distMag;
+    var pull = amount / distMag;
 
     var newDx = entity.dx + pull * Math.cos(rad);
     var newDy = entity.dy + pull * Math.sin(rad);

@@ -34,7 +34,6 @@ socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 	entitiesByID[ownShipEntity.getId()] = ownShipEntity;
 
 	// begin packet loop
-	pingManager.addPing(1);
 	Keys.update();
 	onFrame();
 
@@ -74,7 +73,6 @@ socket.on(Packet.UPDATE_ENTITY, function (data) {
 			entitiesByID[data.entity.id].update(data.entity);
 			if (data.entity.userName === currentUser.name) {
 				var now = (new Date()).getTime();
-				pingManager.addPing(now - lastUpdateTime);
 				// packet loop lols
 				onFrame();
 			}

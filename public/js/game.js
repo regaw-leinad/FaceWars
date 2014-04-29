@@ -7,9 +7,6 @@ var EntityType = {
 	PROJECTILE: 1
 };
 
-var pingManager = new PingManager();
-var lastUpdateTime = (new Date()).getTime();
-
 var entitiesByID = {};
 var ownProjectilesById = {};
 var ownShipEntity;
@@ -43,25 +40,22 @@ $(window).on('resize', function (e) {
 
 // handle frame
 function onFrame() {
-	var ping = pingManager.getCalculatedPing();
-
 	// handle user keyboard input
-	handleInput(ping);
+	handleInput();
 
 	// update ship
 	if (ownShipEntity) {
-		applyGravity(Board.centerX, Board.centerY, 0.02, ownShipEntity, ping);
+		applyGravity(Board.centerX, Board.centerY, 0.02, ownShipEntity);
 		socket.emit(
 			Packet.UPDATE_ENTITY, 
 			{ entity: ownShipEntity.getModel() }
 		);
-		lastUpdateTime = (new Date()).getTime();
 	}
 
 	// update projectiles
 	Object.keys(ownProjectilesById).forEach(function (id) {
 		var projectile = ownProjectilesById[id];
-		applyGravity(Board.centerX, Board.centerY, 0.04, projectile, ping);
+		applyGravity(Board.centerX, Board.centerY, 0.04, projectile);
 		socket.emit(
 			Packet.UPDATE_ENTITY, 
 			{ entity: projectile.getModel() }
@@ -74,12 +68,11 @@ function onFrame() {
 	Keys.update();
 }
 
-function handleInput(ping) {
+function handleInput() {
 	if (!ownShipEntity) return;
 	var ship = ownShipEntity;
-	var ping2 = ping * ping;
-	var speed = 0.00009 * ping2;
-	var rotation = 0.15 * ping;
+	var speed = 0.00009;
+	var rotation = 0.15;
 
 	// left
 	if (Keys.isDown(Keys.LEFT)) {
