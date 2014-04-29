@@ -100,6 +100,10 @@ socket.on('connection', function(client) {
                 users.removeUser(user);
                 var session = sessions.getSessionByUser(user);
                 session.removeUser(user, client);
+                // Remove empty game sessions
+                if (session.getUserCount() === 0) {
+                    sessions.removeSession(session);
+                }
                 socket.sockets.in(session.id).emit(Packet.USER_LEAVE_SESSION, { user: user });
             } 
             // else ignore disconnect
