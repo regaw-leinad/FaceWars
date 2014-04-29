@@ -81,8 +81,9 @@ function onFrame() {
 function handleInput() {
 	if (!ownShipEntity) return;
 	var ship = ownShipEntity;
-	var speed = 0.00009;
-	var rotation = 0.15;
+	var ping = pingManager.getCalculatedPing();
+	var speed = 0.00009 * ping;
+	var rotation = 0.15 * ping;
 
 	// left
 	if (Keys.isDown(Keys.LEFT)) {
