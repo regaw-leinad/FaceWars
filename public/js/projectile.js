@@ -1,5 +1,4 @@
-function Projectile(data) {
-	
+function Projectile(data) {	
 	this.m = {};
 	this.m.id = data.id;
 	this.m.color = data.color;

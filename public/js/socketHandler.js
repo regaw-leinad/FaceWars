@@ -13,7 +13,6 @@ var socket = io.connect('http://localhost:1234');
 //var socket = io.connect('http://iuga.ischool.uw.edu:1234');
 
 socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
-
 	console.log('on USER_AUTH_RESPONSE');
 
 	if (data.err) {
@@ -36,20 +35,12 @@ socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 
 	// begin packet loop
 	Keys.update();
-	onFrame.oldTime = (new Date()).getTime();
-	onFrame((new Date()).getTime());
+	onFrame();
 
 	setUserBox(currentSession.users);
-
 });
 
-// socket.emit(Packet.USER_AUTH_NEW, {
-// 	userName: salt(10),
-// 	color: '#' + Math.floor(Math.random() * 16777215).toString(16)
-// });
-
 socket.on(Packet.USER_JOIN_SESSION, function (data) {
-
 	console.log('on USER_JOIN_SESSION');
 
 	// add user to current session
@@ -58,7 +49,6 @@ socket.on(Packet.USER_JOIN_SESSION, function (data) {
 });
 
 socket.on(Packet.USER_LEAVE_SESSION, function (data) {
-
 	console.log('on USER_LEAVE_SESSION');
 
 	// remove entities from DOM and reference
@@ -74,17 +64,10 @@ socket.on(Packet.USER_LEAVE_SESSION, function (data) {
 });
 
 socket.on(Packet.CHAT_MESSAGE, function(data) {
-
 	console.log('on CHAT_MESSAGE');
-
-	// Display the chat message here
-	// data { user: userObj, msg: '', time: timeStamp }
 });
 
 socket.on(Packet.UPDATE_ENTITY, function (data) {
-
-	//console.log('on UPDATE_ENTITY');
-
 	if (entitiesByID[data.entity.id]) {
 		if (data.entity.type === EntityType.SHIP) {
 			entitiesByID[data.entity.id].update(data.entity);
@@ -101,9 +84,6 @@ socket.on(Packet.UPDATE_ENTITY, function (data) {
 });
 
 socket.on(Packet.ENTITY_DIE, function (data) {
-
-	console.log('on ENTITY_DIE');
-
 	if (entitiesByID[data.entity.id]) {
 		entitiesByID[data.entity.id].removeFromDOM();
 		delete entitiesByID[data.entity.id];

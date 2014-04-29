@@ -1,9 +1,14 @@
 {
-    "name": "FaceWars",
+    "name": "SPACEWAR 2015",
     "version": "1.0.0",
     "description": "Space gravity game",
     "dependencies": {
         "socket.io": "latest"
     },
-    "author": "FaceWars Team"
+    "contributors": [
+        { "name": "Dan Wager" },
+        { "name": "James Prow" },
+        { "name": "Francis Nguyen" },
+        { "name": "Alex Burner" }
+    ]
 }

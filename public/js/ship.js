@@ -1,5 +1,4 @@
 function Ship(data) {
-
 	this.m = {};
 	this.m.id = data.id;
 	this.m.color = data.color;
@@ -30,7 +29,6 @@ function Ship(data) {
 	Board.$el.append(this.el.point);
 
 	this.draw();
-
 }
 
 Ship.createNewDataFromUser = function (user) {

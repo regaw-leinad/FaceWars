@@ -3,6 +3,7 @@ var Keys = (function () {
 	var keyIsDown = {};
 	var keyIsPressed = {};
 	var keyPressLimbo = {};
+
 	// handle key down
 	window.addEventListener('keydown', function (e) {
 		var key = e.keyCode || e.which;
@@ -12,6 +13,7 @@ var Keys = (function () {
 			keyPressLimbo[key] = true;
 		}
 	});
+
 	// handle key up
 	window.addEventListener('keyup', function (e) {
 		var key = e.keyCode || e.which;
@@ -30,6 +32,7 @@ var Keys = (function () {
 			delete keyPressLimbo[key];
 		}
 	});
+
 	// public interface
 	return {
 		// update on frame

@@ -2,6 +2,7 @@
 var killBoxEl = document.createElement('div');
 killBoxEl.setAttribute('id', 'killBox');
 Board.$el.append(killBoxEl);
+
 function setKillBox(kills) {
 	var html = '<b>Kills:</b>&nbsp;';
 	killBoxEl.innerHTML = html + kills;
@@ -11,6 +12,7 @@ function setKillBox(kills) {
 var userBoxEl = document.createElement('div');
 userBoxEl.setAttribute('id', 'userBox');
 Board.$el.append(userBoxEl);
+
 function setUserBox(users) {
 	var html = '';
 	Object.keys(users).forEach(function (key) {

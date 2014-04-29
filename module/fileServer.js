@@ -11,7 +11,7 @@ function FileServer(port) {
         if (parsedUrl.pathname === '/') {
             parsedUrl.pathname = '/index.html';
         }
-        var filename = './newpublic' + parsedUrl.pathname;
+        var filename = './public' + parsedUrl.pathname;
         fs.exists(filename, function (exists) {
             if (exists) {
                 res.writeHeader(200, {

@@ -16,7 +16,6 @@ function applyGravity(cx, cy, amount, entity) {
 }
 
 function checkCollisions() {
-    
     Object.keys(ownProjectilesById).forEach(function (projId) {
         var p = ownProjectilesById[projId];
 
