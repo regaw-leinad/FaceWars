@@ -124,6 +124,9 @@ process.stdin.on('data', function(data) {
     if (data.toString().trim() !== '') {
         var args = data.toString().split(' ');
         var cmd = args.splice(0, 1).toString().trim();
+        if (args.length > 0) {
+            args[args.length - 1] = args[args.length - 1].trim();
+        }
         onCommand(cmd, args);   
     }
 });
@@ -132,5 +135,23 @@ function onCommand(cmd, args) {
     if (cmd === 'stop') {
         console.log('shutting down server...');
         process.exit(1);
+    } else if (cmd === 'dump') {
+        if (args.length === 1) {
+            if (args[0] === 'sessions') {
+                var sessionDump = sessions.getSessions();
+                if (Object.keys(sessionDump).length === 0) {
+                    console.log('No active game sessions');
+                } else {
+                    console.log(sessionDump);
+                }
+            } else if (args[0] === 'users') {
+                var userDump = users.getUsers();
+                if (Object.keys(userDump).length === 0) {
+                    console.log('No users connected');
+                } else {
+                    console.log(userDump);
+                }
+            }
+        }
     }
 }

@@ -40,4 +40,8 @@ SessionStore.prototype.getNextOpenSession = function() {
     return session;
 };
 
+SessionStore.prototype.getSessions = function() {
+    return this.sessions;
+}
+
 module.exports = SessionStore;

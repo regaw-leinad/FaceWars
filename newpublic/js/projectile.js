@@ -36,7 +36,6 @@ function Projectile(data) {
 	}, 7000);
 
 	return this;
-
 }
 
 Projectile.createNewDataFromUser = function (user, shipModel, dx, dy) {

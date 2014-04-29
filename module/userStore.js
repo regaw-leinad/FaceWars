@@ -26,4 +26,8 @@ UserStore.prototype.hasUser = function(userName) {
     return this.users.hasOwnProperty(userName.toLowerCase());
 };
 
+UserStore.prototype.getUsers = function() {
+    return this.users;
+};
+
 module.exports = UserStore;
