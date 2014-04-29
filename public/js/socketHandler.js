@@ -11,6 +11,7 @@ var Packet = {
 
 var socket = io.connect('http://localhost:1234');
 //var socket = io.connect('http://iuga.ischool.uw.edu:1234');
+var lastUpdateTime = 0;
 
 socket.on(Packet.USER_AUTH_RESPONSE, function (data) {
 	console.log('on USER_AUTH_RESPONSE');
@@ -72,8 +73,10 @@ socket.on(Packet.UPDATE_ENTITY, function (data) {
 		if (data.entity.type === EntityType.SHIP) {
 			entitiesByID[data.entity.id].update(data.entity);
 			if (data.entity.userName === currentUser.name) {
+				var now = (new Date()).getTime();
+				pingManager.addPing(now - lastUpdateTime);
 				// packet loop lols
-				onFrame((new Date()).getTime());
+				onFrame();
 			}
 		} else if (data.entity.type === EntityType.PROJECTILE) {
 			entitiesByID[data.entity.id].update(data.entity);

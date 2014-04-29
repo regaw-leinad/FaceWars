@@ -7,6 +7,9 @@ var EntityType = {
 	PROJECTILE: 1
 };
 
+var pingManager = new PingManager();
+var lastUpdateTime = 0;
+
 var entitiesByID = {};
 var ownProjectilesById = {};
 var ownShipEntity;
@@ -38,8 +41,14 @@ $(window).on('resize', function (e) {
 	Board.centerY = Board.height / 2;
 });
 
+var count = 0;
+
 // handle frame
 function onFrame() {
+	if (count++ % 1000 == 0) {
+		console.log(pingManager.getCalculatedPing());
+	}
+	
 	// handle user keyboard input
 	handleInput();
 
@@ -50,6 +59,7 @@ function onFrame() {
 			Packet.UPDATE_ENTITY, 
 			{ entity: ownShipEntity.getModel() }
 		);
+		lastUpdateTime = (new Date()).getTime();
 	}
 
 	// update projectiles
