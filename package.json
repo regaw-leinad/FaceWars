@@ -1,5 +1,5 @@
 {
-    "name": "SPACEWAR 2015",
+    "name": "SPACEWAR_2015",
     "version": "1.0.0",
     "description": "Space gravity game",
     "dependencies": {
