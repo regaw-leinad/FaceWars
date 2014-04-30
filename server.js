@@ -18,12 +18,10 @@ var sessions = new SessionStore();
 var socket = io.listen(fileServer, { 'log level': 1 });
 
 socket.on('connection', function(client) {
-    console.log(client.id + ' has connected');
-
     client.on(Packet.USER_AUTH_NEW, function(data) {
         var address = client.handshake.address;
         console.log('Received USER_AUTH_NEW Packet from: ' + address.address + ':' + address.port);
-        console.log(data);
+        console.log('Username: ' + data.userName);
 
         if (users.getUserIdBySocketId(client.id)) {
             console.log('Unauthorized request');
@@ -32,6 +30,9 @@ socket.on('connection', function(client) {
             if (!data.userName || data.userName.trim().length === 0 || !data.userName.match(/^[a-z0-9]+$/i)) {
                 console.log('Invalid username');
                 client.emit(Packet.USER_AUTH_RESPONSE, { err: 'Invalid username', errCode: 1 }); 
+            } else if (data.userName.length > 16) {
+                console.log('Username too long');
+                client.emit(Packet.USER_AUTH_RESPONSE, { err: 'Username too long', errCode: 1 }); 
             } else if (users.hasUser(data.userName)) {
                 console.log('Username already taken');
                 client.emit(Packet.USER_AUTH_RESPONSE, { err: 'Username already taken', errCode: 2 });
@@ -48,9 +49,6 @@ socket.on('connection', function(client) {
     });
 
     client.on(Packet.UPDATE_ENTITY, function(data) {
-        //console.log('Received UPDATE_ENTITY Packet');
-        //console.log(data);
-
         if (data.entity && data.entity.userName) {
             var user = users.getUserByUserName(data.entity.userName);
 
@@ -67,9 +65,6 @@ socket.on('connection', function(client) {
     });
 
     client.on(Packet.ENTITY_DIE, function(data) {
-        //console.log('Received ENTITY_DIE Packet');
-        //console.log(data);
-
         if (data.entity && data.entity.userName) {
             var user = users.getUserByUserName(data.entity.userName);
 
@@ -86,8 +81,7 @@ socket.on('connection', function(client) {
     });
     
     client.on(Packet.USER_DISCONNECTING, function(data) {
-        console.log('Received USER_DISCONNECTING Packet');
-        console.log(data);
+        console.log('Received USER_DISCONNECTING Packet from: ' + data.user.displayName);
 
         if (data.user) {
             var user = data.user;
@@ -109,9 +103,6 @@ socket.on('connection', function(client) {
     });
 
     client.on(Packet.CHAT_MESSAGE, function(data) {
-        console.log('Received CHAT_MESSAGE Packet');
-        console.log(data);
-
         var registeredUserId = users.getUserIdBySocketId(client.id);
         if (registeredUserId && registeredUserId === data.user.id) {
             var session = sessions.getSessionByUser(user);
@@ -135,7 +126,7 @@ process.stdin.on('data', function(data) {
 
 function onCommand(cmd, args) {
     if (cmd === 'stop') {
-        console.log('shutting down server...');
+        console.log('Shutting down server...');
         process.exit(1);
     } else if (cmd === 'dump') {
         if (args.length === 1) {
