@@ -1,5 +1,7 @@
-$(window).bind('beforeunload', function(eventObject) {
-    socket.emit(Packet.USER_DISCONNECTING, { user: currentUser });
+$(window).bind('beforeunload', function(e) {
+	if (currentUser) {
+	    socket.emit(Packet.USER_DISCONNECTING, { user: currentUser });
+	}
 });
 
 var EntityType = {
