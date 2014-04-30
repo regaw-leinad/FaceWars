@@ -67,14 +67,8 @@ socket.on('connection', function(client) {
     client.on(Packet.ENTITY_DIE, function(data) {
         if (data.entity && data.entity.userName) {
             var user = users.getUserByUserName(data.entity.userName);
-
-            var registeredUserId = users.getUserIdBySocketId(client.id);
-            if (registeredUserId && registeredUserId === user.id) {
-                var session = sessions.getSessionByUser(user);
-                socket.sockets.in(session.id).emit(Packet.ENTITY_DIE, data);
-            } else {
-                // HACKER ALERT!
-            }
+            var session = sessions.getSessionByUser(user);
+            socket.sockets.in(session.id).emit(Packet.ENTITY_DIE, data);
         } else {
             // not a valid packet.. idoit
         }
