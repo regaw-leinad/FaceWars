@@ -28,7 +28,6 @@ function FileServer(port) {
         });
     });
 
-    console.log('About to open port for file server');
     return server.listen(port || 1234);
 }
 
