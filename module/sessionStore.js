@@ -6,12 +6,12 @@ function SessionStore() {
 
 SessionStore.prototype.addSession = function(session) {
     this.sessions[session.id] = session;
-    console.log('added game session with id: ' + session.id);
+    console.log('Added game session with id: ' + session.id);
 };
 
 SessionStore.prototype.removeSession = function(session) {
     delete this.sessions[session.id];
-    console.log('removed game session with id: ' + session.id);
+    console.log('Removed game session with id: ' + session.id);
 };
 
 SessionStore.prototype.getSessionByUser = function(user) {

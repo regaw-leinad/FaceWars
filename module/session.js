@@ -5,7 +5,7 @@ function Session(maxUsers) {
     this.id = (new Date()).getTime() + '-' + salt();
     this.users = {};
     this.userCount = 0;
-    console.log('creating new session with id: ' + this.id + ', max users: ' + this.maxUsers);
+    console.log('Creating new session with id: ' + this.id + ', max users: ' + this.maxUsers);
 }
 
 Session.prototype.addUser = function(user, socket) {
