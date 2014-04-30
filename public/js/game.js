@@ -51,7 +51,7 @@ $(window).on('resize', function (e) {
 });
 
 // Add initial stars here
-stars.push(new Star(Board.centerX, Board.centerY, 30, 0.02, 0.04));
+stars.push(new Star(0, 0, 30, 0.02, 0.04));
 
 // handle frame
 function onFrame() {
@@ -135,4 +135,16 @@ function handleInput() {
 
 function randomIntBetween(min, max) {
     return Math.floor(Math.random()*(max-min+1)+min);
+}
+
+function getInternalCoords(x, y) {
+	var ix = x + Board.centerX;
+	var iy = y + Board.centerY;
+	return { x: ix, y: iy };
+}
+
+function getPublicCoords(x, y) {
+	var px = x - Board.centerX;
+	var py = y - Board.centerY;
+	return { x: px, y: py };
 }

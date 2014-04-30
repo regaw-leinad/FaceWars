@@ -52,8 +52,9 @@ Projectile.createNewDataFromUser = function (user, shipModel, dx, dy) {
 };
 
 Projectile.prototype.draw = function () {
-	this.el.point.style.left = this.m.x + 'px';
-	this.el.point.style.top = this.m.y + 'px';
+	var coords = getInternalCoords(this.m.x, this.m.y);
+	this.el.point.style.left = coords.x + 'px';
+	this.el.point.style.top = coords.y + 'px';
 };
 
 Projectile.prototype.update = function (model) {

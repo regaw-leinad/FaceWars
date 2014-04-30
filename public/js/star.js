@@ -9,8 +9,9 @@ function Star(cx, cy, radius, shipGrav, projGrav) {
     this.el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     this.el.setAttribute('id', this.id);
     this.el.setAttribute('r', this.radius);
-    this.el.setAttribute('cx', this.cx);
-    this.el.setAttribute('cy', this.cy);
+    var coords = getInternalCoords(cx, cy);
+    this.el.setAttribute('cx', coords.x);
+    this.el.setAttribute('cy', coords.y);
     this.el.setAttribute('class', 'star');
     this.el.setAttribute('fill', 'url(#grad2)');
 

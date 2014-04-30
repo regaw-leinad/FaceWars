@@ -36,33 +36,37 @@ Ship.createNewDataFromUser = function (user) {
 	data.id = (new Date()).getTime() + '-' + salt();
 	data.color = user.color;
 	data.userName = user.name;
+	// TODO: Adjust for better starting positions
 	switch (randomIntBetween(1, 4)) {
 		case 1:
-			data.x = 40;
-			data.y = 40;
+			data.x = -500;
+			data.y = -350;
 			break;
 		case 2:
-			data.x = Board.width - 40;
-			data.y = 40;
+			data.x = 500;
+			data.y = -350;
 			break;
 		case 3:
-			data.x = Board.width - 40;
-			data.y = Board.height - 40;
+			data.x = 500;
+			data.y = 350;
 			break;
 		case 4:
-			data.x = 40;
-			data.y = Board.height - 40;
+			data.x = -500;
+			data.y = 350;
 			break;
 	}
 	data.type = EntityType.SHIP;
-	data.shipRotation = 70;
-	data.moveRotation = 70;
+	var rot = randomIntBetween(0, 359);
+	data.shipRotation = rot;
+	data.moveRotation = rot;
 	return data;
 };
 
 Ship.prototype.draw = function () {
-	this.el.point.style.left = this.m.x + 'px';
-	this.el.point.style.top = this.m.y + 'px';
+	var coords = getInternalCoords(this.m.x, this.m.y);
+
+	this.el.point.style.left = coords.x + 'px';
+	this.el.point.style.top = coords.y + 'px';
 	this.el.ship.style.webkitTransform = 'rotate('+this.m.shipRotation+'deg)';
     this.el.ship.style.mozTransform    = 'rotate('+this.m.shipRotation+'deg)';
     this.el.ship.style.msTransform     = 'rotate('+this.m.shipRotation+'deg)';

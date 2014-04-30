@@ -19,37 +19,51 @@ function checkCollisions() {
     Object.keys(ownProjectilesById).forEach(function (projId) {
         var p = ownProjectilesById[projId];
 
-        if (isInsideCircle(p.m.x, p.m.y, Board.centerX, Board.centerY, 30)) {
-            delete ownProjectilesById[projId];
-            console.log('emitting ENTITY_DIE for projectile');
-            socket.emit(Packet.ENTITY_DIE, { entity: p.m });
-        } else if (p.m.x < 0 || p.m.x > Board.width || p.m.y < 0 || p.m.y > Board.height) {
-            delete ownProjectilesById[projId];
-            console.log('emitting ENTITY_DIE for projectile');
-            socket.emit(Packet.ENTITY_DIE, { entity: p.m });
-        } else {
-            Object.keys(entitiesByID).forEach(function(entityId) {
-                var entity = entitiesByID[entityId];
-                if (entity.m.id !== p.m.id && entity.m.userName !== p.m.userName) {
-                    // check collision here
-                    if (isInsideCircle(p.m.x, p.m.y, entity.m.x, entity.m.y, 12.5)) {
-                        delete ownProjectilesById[projId];
-                        console.log('emitting ENTITY_DIE for projectile');
-                        socket.emit(Packet.ENTITY_DIE, { entity: entity.m });
-                        socket.emit(Packet.ENTITY_DIE, { entity: p.m });
-                        kills++;
-                        setKillBox(kills);
+        var hitStar = stars.some(function(s) {
+            if (isInsideCircle(p.m.x, p.m.y, s.cx, s.cy, s.radius)) {
+                delete ownProjectilesById[projId];
+                console.log('emitting ENTITY_DIE for projectile');
+                socket.emit(Packet.ENTITY_DIE, { entity: p.m });
+                return true;
+            }
+
+            return false;
+        });
+        if (!hitStar) {
+            var coords = getInternalCoords(p.m.x, p.m.y);
+            if (coords.x < 0 || coords.x > Board.width || coords.y < 0 || coords.y > Board.height) {
+                delete ownProjectilesById[projId];
+                console.log('emitting ENTITY_DIE for projectile');
+                socket.emit(Packet.ENTITY_DIE, { entity: p.m });
+            } else {
+                Object.keys(entitiesByID).forEach(function(entityId) {
+                    var entity = entitiesByID[entityId];
+                    if (entity.m.id !== p.m.id && entity.m.userName !== p.m.userName) {
+                        // check collision here
+                        if (isInsideCircle(p.m.x, p.m.y, entity.m.x, entity.m.y, 12.5)) {
+                            delete ownProjectilesById[projId];
+                            console.log('emitting ENTITY_DIE for projectile');
+                            socket.emit(Packet.ENTITY_DIE, { entity: entity.m });
+                            socket.emit(Packet.ENTITY_DIE, { entity: p.m });
+                            kills++;
+                            setKillBox(kills);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     });
 
     var c = ownShipEntity;
-    if (isInsideCircle(c.m.x, c.m.y, Board.centerX, Board.centerY, 30)) {
-        console.log('emitting ENTITY_DIE for player ship');
-        socket.emit(Packet.ENTITY_DIE, { entity: c.m });
-    }
+    stars.some(function(s) {
+        if (isInsideCircle(c.m.x, c.m.y, s.cx, s.cy, s.radius)) {
+            console.log('emitting ENTITY_DIE for player ship');
+            socket.emit(Packet.ENTITY_DIE, { entity: c.m });
+            return true;
+        }
+
+        return false;
+    });
 }
 
 function isInsideCircle(x, y, cx, cy, rad) {
