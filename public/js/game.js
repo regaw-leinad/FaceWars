@@ -1,3 +1,9 @@
+var bgMusic = new Audio();
+bgMusic.src = 'other/space.mp3';
+bgMusic.addEventListener('canplay', function() {
+	bgMusic.play();
+});
+
 $(window).bind('beforeunload', function(e) {
 	if (currentUser) {
 	    socket.emit(Packet.USER_DISCONNECTING, { user: currentUser });
